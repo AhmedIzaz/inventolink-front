@@ -9,17 +9,26 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ant-design/icons": "^5.0.1",
+    "@reduxjs/toolkit": "^1.9.3",
     "@types/node": "18.15.11",
     "@types/react": "18.0.33",
     "@types/react-dom": "18.0.11",
+    "antd": "^5.4.0",
     "autoprefixer": "10.4.14",
     "eslint": "8.37.0",
     "eslint-config-next": "13.3.0",
+    "framer-motion": "^10.11.2",
+    "moment": "^2.29.4",
     "next": "13.3.0",
     "postcss": "8.4.21",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-redux": "^8.0.5",
     "tailwindcss": "3.3.1",
     "typescript": "5.0.3"
+  },
+  "devDependencies": {
+    "definitely-typed": "github:DefinitelyTyped/DefinitelyTyped#master"
   }
 }
