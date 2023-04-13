@@ -4,7 +4,7 @@ import MainLayout from "../common/Layout/MainLayout";
 const HomePage = () => {
   return (
     <div>
-      <MainLayout component={() => <div>Heelllll</div>} />
+      <MainLayout Component={() => <div>Heelllll</div>} />
     </div>
   );
 };
