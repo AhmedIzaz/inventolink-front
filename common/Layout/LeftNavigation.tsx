@@ -4,7 +4,7 @@ import {
   LeftOutlined,
   RightOutlined,
 } from "@ant-design/icons";
-import { Button } from "antd";
+import { Button, Typography } from "antd";
 import React, { Dispatch, useState } from "react";
 import menuData from "../../utils/testData";
 interface ILeftNavigationProps {
