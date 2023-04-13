@@ -1,15 +1,13 @@
 import React from "react";
 import NormalSelect from "../NormalSelect";
-import { NextComponentType, NextPageContext } from "next";
+import { NextComponentType, NextPage, NextPageContext } from "next";
 interface IMainContentContainerProps {
   expandOn: boolean;
-  Component: NextComponentType<NextPageContext, any, {}>;
-  pageProps: Record<string, unknown>;
+  component: NextPage;
 }
 const MainContentContainer = ({
   expandOn,
-  Component,
-  pageProps,
+  component,
 }: IMainContentContainerProps) => {
   return (
     <div
@@ -32,7 +30,7 @@ const MainContentContainer = ({
         </div>
       </div>
       <div className="mt-10 mx-2">
-        <Component {...pageProps} />
+        {/* <component /> */}
       </div>
     </div>
   );
