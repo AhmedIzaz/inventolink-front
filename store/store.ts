@@ -1,8 +1,9 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage/session";
 import { rootReducer } from "./reducers";
+import { testApi } from "./queries";
 const persistConfig = {
   key: "root",
   storage,
@@ -10,6 +11,10 @@ const persistConfig = {
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 export const store = configureStore({
   reducer: persistedReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({ serializableCheck: false }).concat(
+      testApi.middleware
+    ),
 });
 export const persistor = persistStore(store);
 export type RootState = ReturnType<typeof store.getState>;
