@@ -23,26 +23,34 @@ const MainNavigationLayout = ({
       {!mediumScreen ? (
         <Header
           className=" flex place-items-center justify-between"
-          style={{ position: "sticky", top: 0, zIndex: 1, width: "100%" }}
+          style={{
+            position: "sticky",
+            top: 0,
+            zIndex: 1,
+            width: "100%",
+            padding: "1%",
+          }}
         >
-          <div className=" w-1/5 rounded-md">
+          <div className=" w-1/5 px-1 py-2 rounded-md">
             <img
               src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSyRpN_EMx_HPvIf9LltU0h2uWhvPgyUW7ncs4vhb9VjQ&s"
               className=" w-full object-cover rounded-lg"
               alt="logo"
             />
           </div>
-          <Menu
-            theme="dark"
-            defaultSelectedKeys={["1"]}
-            mode="horizontal"
-            items={menuItems}
-            onSelect={(value) => {
-              console.log(value);
-              // in future inshallah
-              // Router.push(value?.route)
-            }}
-          />
+          <div className=" w-4/5">
+            <Menu
+              theme="dark"
+              defaultSelectedKeys={["1"]}
+              mode="horizontal"
+              items={menuItems}
+              onSelect={(value) => {
+                console.log(value);
+                // in future inshallah
+                // Router.push(value?.route)
+              }}
+            />
+          </div>
         </Header>
       ) : (
         <Sider
