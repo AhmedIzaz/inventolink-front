@@ -2,17 +2,15 @@ import { Spin } from "antd";
 import { useAppSelector } from "../store/store";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
+import { shallowEqual } from "react-redux";
+import { NextPage } from "next";
 
-const IndexPage = () => {
+const IndexPage: NextPage = () => {
   const router = useRouter();
-  const { isAuth } = useAppSelector((store) => store?.auth);
+  const { isAuth } = useAppSelector((store) => store?.auth, shallowEqual);
   useEffect(() => {
-    if (isAuth) {
-      router.push("/home");
-    } else {
-      router.push("/auth/login");
-    }
-  }, [isAuth]);
+    router.push("/home");
+  }, []);
   return (
     <>
       <Spin />
