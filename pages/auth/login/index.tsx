@@ -3,6 +3,7 @@ import CommonInput from "../../../common/components/CommonInput";
 import CommonButton from "../../../common/components/CommonButton";
 import { Form } from "antd";
 import { IValidationSchema } from "../../../common/types/formTypes";
+import { useLoginMutation } from "../../../store/queries/authApi";
 
 const validationSchema: IValidationSchema = {
   email: [
@@ -26,6 +27,9 @@ const LoginPage = () => {
     email: "",
     password: "",
   });
+  const [login, result] = useLoginMutation();
+
+  console.log(result);
   return (
     <div className="min-h-screen min-w-full flex items-center justify-center">
       <div className=" max-w-lg w-11/12  px-3 pt-8 pb-4 rounded-md ring-1 ring-gray-300 ">
@@ -33,7 +37,7 @@ const LoginPage = () => {
         <Form
           layout="vertical"
           onFinish={(values) => {
-            console.log(values);
+            login(values);
           }}
         >
           <CommonInput

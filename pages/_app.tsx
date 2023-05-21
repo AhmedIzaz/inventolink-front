@@ -6,6 +6,7 @@ import "tailwindcss/tailwind.css";
 import { AppProps } from "next/app";
 import MainLayout from "../common/Layout/MainLayout";
 import LoginPage from "./auth/login";
+
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <Provider store={store}>
