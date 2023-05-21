@@ -8,6 +8,7 @@ import {
 } from "@ant-design/icons";
 import MainContentLayout from "./MainContentLayout";
 import MainNavigationLayout, { MenuItem } from "./MainNavigationLayout";
+import Head from "next/head";
 
 interface IMainLayoutProps {
   Component: NextPage;
@@ -150,6 +151,12 @@ const MainLayout = ({ Component, footer }: IMainLayoutProps) => {
   console.log(pageTitle);
   return (
     <Layout style={{ minHeight: "100vh" }}>
+      <Head>
+        <link
+          href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap"
+          rel="stylesheet"
+        />
+      </Head>
       <MainNavigationLayout
         colorBgContainer={colorBgContainer}
         setPageTitle={setPageTitle}
