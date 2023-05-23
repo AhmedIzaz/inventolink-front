@@ -6,6 +6,7 @@ import "tailwindcss/tailwind.css";
 import { AppProps } from "next/app";
 import MainLayout from "../common/Layout/MainLayout";
 import LoginPage from "./auth/login";
+import { ToastContainer } from "react-toastify";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -16,6 +17,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         ) : (
           <MainLayout Component={() => <Component {...pageProps} />} />
         )}
+        <ToastContainer position="bottom-right" />
       </PersistGate>
     </Provider>
   );
