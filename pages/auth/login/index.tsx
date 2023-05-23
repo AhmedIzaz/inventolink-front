@@ -6,15 +6,23 @@ import { IValidationSchema } from "../../../common/types/formTypes";
 import { useLoginMutation } from "../../../store/queries/authApi";
 import { IUserLoginDataset } from "../../../interfaces/configurationInterfaces/userConfigurationInterfaces/userConfigurationInterfaces";
 import { API_BASE_URL } from "../../../store/api";
+import { useAppDispatch, useAppSelector } from "../../../store/store";
+import { shallowEqual } from "react-redux";
+import { on } from "events";
+import { setUserInformation } from "../../../store/reducers/configurationSlices/authSlice";
 
 const LoginPage = () => {
+  const { userInformation } = useAppSelector(
+    (store) => store?.userSlice,
+    shallowEqual
+  );
+  const dispatch = useAppDispatch();
   const [form, setForm] = useState<IUserLoginDataset>({
     email: "",
     password: "",
   });
   const [login, result] = useLoginMutation();
-
-  console.log(result);
+  console.log(userInformation);
   return (
     <div className="min-h-screen min-w-full flex items-center justify-center">
       <div className=" max-w-lg w-11/12  px-3 pt-8 pb-4 rounded-md ring-1 ring-gray-300 ">
@@ -22,8 +30,17 @@ const LoginPage = () => {
         <Form
           layout="vertical"
           onFinish={(values) => {
-            console.log(process.env, API_BASE_URL);
-            login(values);
+            const onLogin = async () => {
+              try {
+                const { message, ...responseData } = await login(
+                  values
+                ).unwrap();
+                dispatch(setUserInformation(responseData));
+              } catch (err) {
+                console.log(err);
+              }
+            };
+            onLogin();
           }}
         >
           <CommonInput
