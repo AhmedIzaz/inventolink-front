@@ -13,6 +13,7 @@ import { useAppSelector } from "../../store/store";
 import { shallowEqual } from "react-redux";
 import { isTokenExpired } from "../../store/api";
 import { useRouter } from "next/router";
+import { toast } from "react-toastify";
 
 interface IMainLayoutProps {
   Component: NextPage;
@@ -162,6 +163,9 @@ const MainLayout = ({ Component, footer }: IMainLayoutProps) => {
     if (userInformation?.token) {
       const tokenExpired = isTokenExpired(userInformation?.token);
       if (!userInformation?.token || tokenExpired) {
+        if (tokenExpired)
+          toast.warn("Your session has expired, please login again");
+        else toast.warn("You are not logged in, please login");
         router.push("/auth/login");
       }
     }
