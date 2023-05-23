@@ -8,8 +8,8 @@ type Props = InputHTMLAttributes<HTMLInputElement> &
   InputProps & {
     size?: SizeType | string | undefined;
     label?: string;
-    fieldClassName?: string;
-    inputContainerClassName?: string;
+
+    inputcontainerclassname?: string;
     labelClassName?: string;
     rules?: Rule[];
     labelProps?: FormItemLabelProps;
@@ -21,12 +21,11 @@ const CommonInput = forwardRef(
       <Form.Item
         {...labelProps}
         label={rest?.label ?? ""}
-        className={rest?.inputContainerClassName || ""}
+        className={rest?.inputcontainerclassname || ""}
         name={rest?.name ?? ""}
         rules={rest?.rules ?? []}
       >
         <Input
-          className={rest?.fieldClassName || ""}
           type={rest?.type || "text"}
           size={rest?.size || "middle"}
           {...rest}

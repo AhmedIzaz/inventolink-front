@@ -9,6 +9,10 @@ import {
 import MainContentLayout from "./MainContentLayout";
 import MainNavigationLayout, { MenuItem } from "./MainNavigationLayout";
 import Head from "next/head";
+import { useAppSelector } from "../../store/store";
+import { shallowEqual } from "react-redux";
+import { isTokenExpired } from "../../store/api";
+import { useRouter } from "next/router";
 
 interface IMainLayoutProps {
   Component: NextPage;
@@ -43,6 +47,11 @@ const getItem = ({
 };
 
 const MainLayout = ({ Component, footer }: IMainLayoutProps) => {
+  const { userInformation } = useAppSelector(
+    (store) => store?.userSlice,
+    shallowEqual
+  );
+  const router = useRouter();
   const [collapsed, setCollapsed] = useState(false);
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [selectedMenuItem, setSelectedMenuItem] = useState<MenuItem | null>(
@@ -148,6 +157,15 @@ const MainLayout = ({ Component, footer }: IMainLayoutProps) => {
       }
     });
   }, []);
+
+  useEffect(() => {
+    if (userInformation?.token) {
+      const tokenExpired = isTokenExpired(userInformation?.token);
+      if (!userInformation?.token || tokenExpired) {
+        router.push("/auth/login");
+      }
+    }
+  }, [Component]);
   console.log(pageTitle);
   return (
     <Layout style={{ minHeight: "100vh" }}>

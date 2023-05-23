@@ -4,6 +4,91 @@ import CommonButton from "../../../common/components/CommonButton";
 import { Form } from "antd";
 import { IValidationSchema } from "../../../common/types/formTypes";
 import { useLoginMutation } from "../../../store/queries/authApi";
+import { IUserLoginDataset } from "../../../interfaces/configurationInterfaces/userConfigurationInterfaces/userConfigurationInterfaces";
+import { useAppDispatch, useAppSelector } from "../../../store/store";
+import { shallowEqual } from "react-redux";
+import { setUserInformation } from "../../../store/reducers/configurationSlices/authSlice";
+import Loading from "../../../common/components/Loading";
+import { useRouter } from "next/router";
+
+const LoginPage = () => {
+  const { userInformation } = useAppSelector(
+    (store) => store?.userSlice,
+    shallowEqual
+  );
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+  const [form, setForm] = useState<IUserLoginDataset>({
+    email: "",
+    password: "",
+  });
+  const [login, { isLoading }] = useLoginMutation();
+  console.log(userInformation);
+  return (
+    <>
+      {isLoading && <Loading />}
+      <div className="min-h-screen min-w-full flex items-center justify-center">
+        <div className=" max-w-lg w-11/12  px-3 pt-8 pb-4 rounded-md ring-1 ring-gray-300 ">
+          <h1 className="text-center text-3xl font-se rif">Login</h1>
+          <Form
+            layout="vertical"
+            onFinish={(values) => {
+              const onLogin = async () => {
+                try {
+                  const { message, ...responseData } = await login(
+                    values
+                  ).unwrap();
+                  dispatch(setUserInformation(responseData));
+                  router.push("/");
+                } catch (err) {
+                  console.log(err);
+                }
+              };
+              onLogin();
+            }}
+          >
+            <CommonInput
+              className=""
+              label="Email"
+              placeholder="example@email.com"
+              name="email"
+              type="email"
+              value={form?.email}
+              onChange={(e) => {
+                setForm((prev) => ({ ...prev, email: e.target.value }));
+              }}
+              rules={validationSchema?.email}
+            />
+            <CommonInput
+              inputcontainerclassname=""
+              className=""
+              label="Password"
+              placeholder="Password"
+              name="password"
+              type="password"
+              value={form?.password}
+              onChange={(e) => {
+                setForm((prev) => ({ ...prev, password: e.target.value }));
+              }}
+              rules={validationSchema?.password}
+            />
+            <CommonButton
+              type="primary"
+              size="middle"
+              className="w-full"
+              rootClassName="bg-blue-500 text-white"
+              htmlType="submit"
+            >
+              Submit
+            </CommonButton>
+          </Form>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default LoginPage;
 
 const validationSchema: IValidationSchema = {
   email: [
@@ -21,65 +106,3 @@ const validationSchema: IValidationSchema = {
     },
   ],
 };
-
-const LoginPage = () => {
-  const [form, setForm] = useState({
-    email: "",
-    password: "",
-  });
-  const [login, result] = useLoginMutation();
-
-  console.log(result);
-  return (
-    <div className="min-h-screen min-w-full flex items-center justify-center">
-      <div className=" max-w-lg w-11/12  px-3 pt-8 pb-4 rounded-md ring-1 ring-gray-300 ">
-        <h1 className="text-center text-3xl font-se rif">Login</h1>
-        <Form
-          layout="vertical"
-          onFinish={(values) => {
-            login(values);
-          }}
-        >
-          <CommonInput
-            inputContainerClassName="my-2"
-            className="text-md font-bold text-gray-500 "
-            label="Email"
-            placeholder="example@email.com"
-            name="email"
-            type="email"
-            value={form?.email}
-            fieldClassName="my-4"
-            onChange={(e) => {
-              setForm((prev) => ({ ...prev, email: e.target.value }));
-            }}
-            rules={validationSchema?.email}
-          />
-          <CommonInput
-            inputContainerClassName=" my-2"
-            className=" text-md font-bold text-gray-500 "
-            label="Password"
-            placeholder="Password"
-            name="password"
-            type="password"
-            value={form?.password}
-            onChange={(e) => {
-              setForm((prev) => ({ ...prev, password: e.target.value }));
-            }}
-            rules={validationSchema?.password}
-          />
-          <CommonButton
-            type="primary"
-            size="middle"
-            className="w-full"
-            rootClassName="bg-blue-500 text-white mt-2"
-            htmlType="submit"
-          >
-            Submit
-          </CommonButton>
-        </Form>
-      </div>
-    </div>
-  );
-};
-
-export default LoginPage;
