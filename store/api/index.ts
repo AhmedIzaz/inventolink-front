@@ -1,5 +1,5 @@
 import { MaybePromise } from "@reduxjs/toolkit/dist/query/tsHelpers";
-import jsonwebtoken from "jsonwebtoken";
+import { isExpired } from "react-jwt";
 export const API_BASE_URL =
   process.env.NODE_ENV === "production"
     ? "http://link.invento.com"
@@ -17,6 +17,5 @@ export const commonPrepareHeader = (
 };
 
 export const isTokenExpired = (token: string): boolean => {
-  const jwt = jsonwebtoken.decode(token);
-  return true;
+  return isExpired(token);
 };
