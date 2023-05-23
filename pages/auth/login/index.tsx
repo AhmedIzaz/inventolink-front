@@ -5,11 +5,11 @@ import { Form } from "antd";
 import { IValidationSchema } from "../../../common/types/formTypes";
 import { useLoginMutation } from "../../../store/queries/authApi";
 import { IUserLoginDataset } from "../../../interfaces/configurationInterfaces/userConfigurationInterfaces/userConfigurationInterfaces";
-import { API_BASE_URL } from "../../../store/api";
 import { useAppDispatch, useAppSelector } from "../../../store/store";
 import { shallowEqual } from "react-redux";
-import { on } from "events";
 import { setUserInformation } from "../../../store/reducers/configurationSlices/authSlice";
+import Loading from "../../../common/components/Loading";
+import { useRouter } from "next/router";
 
 const LoginPage = () => {
   const { userInformation } = useAppSelector(
@@ -17,69 +17,74 @@ const LoginPage = () => {
     shallowEqual
   );
   const dispatch = useAppDispatch();
+  const router = useRouter();
   const [form, setForm] = useState<IUserLoginDataset>({
     email: "",
     password: "",
   });
-  const [login, result] = useLoginMutation();
+  const [login, { isLoading }] = useLoginMutation();
   console.log(userInformation);
   return (
-    <div className="min-h-screen min-w-full flex items-center justify-center">
-      <div className=" max-w-lg w-11/12  px-3 pt-8 pb-4 rounded-md ring-1 ring-gray-300 ">
-        <h1 className="text-center text-3xl font-se rif">Login</h1>
-        <Form
-          layout="vertical"
-          onFinish={(values) => {
-            const onLogin = async () => {
-              try {
-                const { message, ...responseData } = await login(
-                  values
-                ).unwrap();
-                dispatch(setUserInformation(responseData));
-              } catch (err) {
-                console.log(err);
-              }
-            };
-            onLogin();
-          }}
-        >
-          <CommonInput
-            className=""
-            label="Email"
-            placeholder="example@email.com"
-            name="email"
-            type="email"
-            value={form?.email}
-            onChange={(e) => {
-              setForm((prev) => ({ ...prev, email: e.target.value }));
+    <>
+      {isLoading && <Loading />}
+      <div className="min-h-screen min-w-full flex items-center justify-center">
+        <div className=" max-w-lg w-11/12  px-3 pt-8 pb-4 rounded-md ring-1 ring-gray-300 ">
+          <h1 className="text-center text-3xl font-se rif">Login</h1>
+          <Form
+            layout="vertical"
+            onFinish={(values) => {
+              const onLogin = async () => {
+                try {
+                  const { message, ...responseData } = await login(
+                    values
+                  ).unwrap();
+                  dispatch(setUserInformation(responseData));
+                  router.push("/");
+                } catch (err) {
+                  console.log(err);
+                }
+              };
+              onLogin();
             }}
-            rules={validationSchema?.email}
-          />
-          <CommonInput
-            inputcontainerclassname=""
-            className=""
-            label="Password"
-            placeholder="Password"
-            name="password"
-            type="password"
-            value={form?.password}
-            onChange={(e) => {
-              setForm((prev) => ({ ...prev, password: e.target.value }));
-            }}
-            rules={validationSchema?.password}
-          />
-          <CommonButton
-            type="primary"
-            size="middle"
-            className="w-full"
-            rootClassName="bg-blue-500 text-white"
-            htmlType="submit"
           >
-            Submit
-          </CommonButton>
-        </Form>
+            <CommonInput
+              className=""
+              label="Email"
+              placeholder="example@email.com"
+              name="email"
+              type="email"
+              value={form?.email}
+              onChange={(e) => {
+                setForm((prev) => ({ ...prev, email: e.target.value }));
+              }}
+              rules={validationSchema?.email}
+            />
+            <CommonInput
+              inputcontainerclassname=""
+              className=""
+              label="Password"
+              placeholder="Password"
+              name="password"
+              type="password"
+              value={form?.password}
+              onChange={(e) => {
+                setForm((prev) => ({ ...prev, password: e.target.value }));
+              }}
+              rules={validationSchema?.password}
+            />
+            <CommonButton
+              type="primary"
+              size="middle"
+              className="w-full"
+              rootClassName="bg-blue-500 text-white"
+              htmlType="submit"
+            >
+              Submit
+            </CommonButton>
+          </Form>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
