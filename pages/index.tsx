@@ -13,7 +13,7 @@ const IndexPage: NextPage = () => {
     shallowEqual
   );
 
-  // 
+  //
   // check if the token is expired or not
   useEffect(() => {
     let tokenExpired = false;
