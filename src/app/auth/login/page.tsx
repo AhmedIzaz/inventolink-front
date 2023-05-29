@@ -1,15 +1,16 @@
+"use client";
 import React, { useState } from "react";
-import CommonInput from "../../../common/components/CommonInput";
-import CommonButton from "../../../common/components/CommonButton";
 import { Form } from "antd";
-import { IValidationSchema } from "../../../common/types/formTypes";
-import { useLoginMutation } from "../../../store/queries/authApi";
-import { IUserLoginDataset } from "../../../interfaces/configurationInterfaces/userConfigurationInterfaces/userConfigurationInterfaces";
-import { useAppDispatch, useAppSelector } from "../../../store/store";
 import { shallowEqual } from "react-redux";
-import { setUserInformation } from "../../../store/reducers/configurationSlices/authSlice";
-import Loading from "../../../common/components/Loading";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
+import Loading from "../../../../common/components/Loading";
+import { useAppDispatch, useAppSelector } from "../../../../store/store";
+import { IUserLoginDataset } from "../../../../interfaces/configurationInterfaces/userConfigurationInterfaces/userConfigurationInterfaces";
+import { useLoginMutation } from "../../../../store/queries/authApi";
+import { setUserInformation } from "../../../../store/reducers/configurationSlices/authSlice";
+import CommonInput from "../../../../common/components/CommonInput";
+import CommonButton from "../../../../common/components/CommonButton";
+import { IValidationSchema } from "../../../../common/types/formTypes";
 
 const LoginPage = () => {
   const { userInformation } = useAppSelector(

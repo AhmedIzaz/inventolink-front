@@ -1,5 +1,5 @@
+"use client";
 import { Layout, Typography } from "antd";
-import { NextPage } from "next";
 import React from "react";
 import NormalSelect from "../components/NormalSelect";
 const { Header, Content, Footer } = Layout;
@@ -9,7 +9,7 @@ interface IMainContentLayoutProps {
   colorBgContainer?: string;
   pageTitle?: string;
   footer?: React.ReactNode;
-  Component?: NextPage;
+  Component?: React.ReactNode;
 }
 const MainContentLayout = ({
   mediumScreen,
@@ -49,7 +49,7 @@ const MainContentLayout = ({
         </div>
       </Header>
       <Content className=" !overflow-x-hidden !overflow-y-auto mx-2">
-        <Component />
+        {Component}
       </Content>
       {footer && <Footer>{footer}</Footer>}
     </Layout>

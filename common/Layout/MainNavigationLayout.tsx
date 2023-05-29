@@ -1,3 +1,4 @@
+"use client"
 import { Layout, Menu, MenuProps, Typography } from "antd";
 import React from "react";
 export type MenuItem = Required<MenuProps>["items"][number];
