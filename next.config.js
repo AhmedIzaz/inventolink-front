@@ -1,7 +1,10 @@
+/** @type {import('next').NextConfig} */
+
 require("dotenv").config();
-module.exports = {
-  cssModules: true,
-  cssLoaderOptions: {
-    importLoaders: 1,
+const nextConfig = {
+  experimental: {
+    appDir: true,
   },
 };
+
+module.exports = nextConfig;
