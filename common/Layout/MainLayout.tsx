@@ -1,6 +1,6 @@
+"use client";
 import { Layout, theme } from "antd";
 import { useEffect, useState } from "react";
-import { NextPage } from "next";
 import {
   HomeOutlined,
   SettingOutlined,
@@ -12,11 +12,11 @@ import Head from "next/head";
 import { useAppSelector } from "../../store/store";
 import { shallowEqual } from "react-redux";
 import { isTokenExpired } from "../../store/api";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
 interface IMainLayoutProps {
-  Component: NextPage;
+  Component: React.ReactNode;
   footer?: React.ReactNode;
 }
 
