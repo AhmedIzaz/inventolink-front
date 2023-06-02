@@ -9,11 +9,14 @@ import {
 import MainContentLayout from "./MainContentLayout";
 import MainNavigationLayout, { MenuItem } from "./MainNavigationLayout";
 import Head from "next/head";
-import { useAppSelector } from "../../store/store";
+import { useAppDispatch, useAppSelector } from "../../store/store";
 import { shallowEqual } from "react-redux";
 import { isTokenExpired } from "../../store/api";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import Axios from "axios";
+import { setUserInformation } from "../../store/reducers/configurationSlices/authSlice";
+import Loading from "../components/Loading";
 
 interface IMainLayoutProps {
   Component: React.ReactNode;
@@ -27,6 +30,7 @@ interface IGetMenuItemProps {
   children?: MenuItem[];
   onClick?: (menuItem: MenuItem) => void;
   title?: string;
+  path?: string;
 }
 
 const getItem = ({
@@ -36,7 +40,8 @@ const getItem = ({
   children,
   onClick,
   title,
-}: IGetMenuItemProps): MenuItem => {
+  path,
+}: IGetMenuItemProps): MenuItem & { path?: string } => {
   return {
     key,
     icon,
@@ -44,14 +49,17 @@ const getItem = ({
     label,
     onClick,
     title,
+    path,
   };
 };
 
 const MainLayout = ({ Component, footer }: IMainLayoutProps) => {
+  const [loading, setLoading] = useState(true);
   const { userInformation } = useAppSelector(
     (store) => store?.userSlice,
     shallowEqual
   );
+  const dispatch = useAppDispatch();
   const router = useRouter();
   const [collapsed, setCollapsed] = useState(false);
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
@@ -70,6 +78,7 @@ const MainLayout = ({ Component, footer }: IMainLayoutProps) => {
         title: "Home",
         key: "1",
         icon: <HomeOutlined />,
+        path: "/",
       }),
       getItem({
         label: "Procurement",
@@ -139,6 +148,7 @@ const MainLayout = ({ Component, footer }: IMainLayoutProps) => {
         key: "3",
         icon: <SettingOutlined />,
         title: "Inventory",
+        path: "/inventory",
       }),
     ];
     setMenuItems(items);
@@ -158,44 +168,62 @@ const MainLayout = ({ Component, footer }: IMainLayoutProps) => {
       }
     });
   }, []);
-
+  Axios.interceptors.response.use(
+    (response) => response,
+    (error) => {
+      if (error.response.status === 401) {
+        toast.warn("You are not authorized to access this page. Log in first");
+        dispatch(setUserInformation({}));
+        router.push("/auth/login");
+      }
+      return Promise.reject(error);
+    }
+  );
   useEffect(() => {
     if (userInformation?.token) {
       const tokenExpired = isTokenExpired(userInformation?.token);
-      if (!userInformation?.token || tokenExpired) {
-        if (tokenExpired)
-          toast.warn("Your session has expired, please login again");
-        else toast.warn("You are not logged in, please login");
+      if (tokenExpired) {
+        toast.warn("Your session has expired, please login again");
         router.push("/auth/login");
       }
+    } else {
+      router.push("/auth/login");
+      toast.warn("You are not logged in, please login");
     }
+    setLoading(false);
   }, [Component]);
   console.log(pageTitle);
   return (
-    <Layout style={{ minHeight: "100vh" }}>
-      <Head>
-        <link
-          href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap"
-          rel="stylesheet"
-        />
-      </Head>
-      <MainNavigationLayout
-        colorBgContainer={colorBgContainer}
-        setPageTitle={setPageTitle}
-        mediumScreen={mediumScreen}
-        menuItems={menuItems}
-        collapsed={collapsed}
-        setCollapsed={setCollapsed}
-      />
-      <MainContentLayout
-        footer={footer}
-        pageTitle={pageTitle}
-        Component={Component}
-        mediumScreen={mediumScreen}
-        collapsed={collapsed}
-        colorBgContainer={colorBgContainer}
-      />
-    </Layout>
+    <>
+      {loading ? (
+        <Loading />
+      ) : (
+        <Layout style={{ minHeight: "100vh" }}>
+          <Head>
+            <link
+              href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap"
+              rel="stylesheet"
+            />
+          </Head>
+          <MainNavigationLayout
+            colorBgContainer={colorBgContainer}
+            setPageTitle={setPageTitle}
+            mediumScreen={mediumScreen}
+            menuItems={menuItems}
+            collapsed={collapsed}
+            setCollapsed={setCollapsed}
+          />
+          <MainContentLayout
+            footer={footer}
+            pageTitle={pageTitle}
+            Component={Component}
+            mediumScreen={mediumScreen}
+            collapsed={collapsed}
+            colorBgContainer={colorBgContainer}
+          />
+        </Layout>
+      )}
+    </>
   );
 };
 
