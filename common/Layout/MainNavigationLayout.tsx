@@ -1,5 +1,6 @@
-"use client"
+"use client";
 import { Layout, Menu, MenuProps, Typography } from "antd";
+import { useRouter } from "next/navigation";
 import React from "react";
 export type MenuItem = Required<MenuProps>["items"][number];
 const { Header, Sider } = Layout;
@@ -19,6 +20,7 @@ const MainNavigationLayout = ({
   colorBgContainer,
   setPageTitle,
 }: IMainNavigationLayoutProps) => {
+  const router = useRouter();
   return (
     <>
       {!mediumScreen ? (
@@ -95,6 +97,7 @@ const MainNavigationLayout = ({
               console.log(value);
               // in future inshallah
               // Router.push(value?.route)
+              router.push(value?.item?.props?.path);
               if (value) {
                 setPageTitle(value?.item?.props?.title);
               }
