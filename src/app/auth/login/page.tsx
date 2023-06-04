@@ -47,19 +47,17 @@ const LoginPage = () => {
             <h1 className="text-center text-3xl font-se rif">Login</h1>
             <Form
               layout="vertical"
-              onFinish={(values) => {
-                const onLogin = async () => {
-                  try {
-                    const { message, ...responseData } = await login(
-                      values
-                    ).unwrap();
-                    dispatch(setUserInformation(responseData));
-                    router.push("/");
-                  } catch (err) {
-                    console.log(err);
-                  }
-                };
-                onLogin();
+              onFinish={async (values) => {
+                try {
+                  const { message, ...responseData } = await login(
+                    values
+                  ).unwrap();
+                  dispatch(setUserInformation(responseData));
+                  router.push("/");
+                  toast.success(message);
+                } catch (err) {
+                  toast.error(err?.data?.message);
+                }
               }}
             >
               <CommonInput
