@@ -184,6 +184,7 @@ const MainLayout = ({ Component, footer }: IMainLayoutProps) => {
       const tokenExpired = isTokenExpired(userInformation?.token);
       if (tokenExpired) {
         toast.warn("Your session has expired, please login again");
+        dispatch(setUserInformation({}));
         router.push("/auth/login");
       }
     } else {
