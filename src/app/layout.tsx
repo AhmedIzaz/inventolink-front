@@ -2,11 +2,9 @@
 import "./globals.css";
 import Providers from "../redux/providers";
 import Axios from "axios";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import MainLayout from "../../common/Layout/MainLayout";
-import { toast, ToastContainer } from "react-toastify";
-import { useAppDispatch } from "../../store/store";
-import { setUserInformation } from "../../store/reducers/configurationSlices/authSlice";
+import { ToastContainer } from "react-toastify";
 
 export default function RootLayout({
   children,
@@ -14,7 +12,6 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const router = useRouter();
   Axios.defaults.baseURL =
     process.env.NODE_ENV === "development"
       ? process.env.REACT_APP_DEV_BASE_URL
