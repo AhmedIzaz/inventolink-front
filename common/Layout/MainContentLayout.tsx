@@ -1,7 +1,9 @@
 "use client";
 import { Button, Image, Layout, Typography } from "antd";
 import React from "react";
+import { useDispatch } from "react-redux";
 import { shallowEqual } from "react-redux";
+import { setSelectedBusinessUnit } from "../../store/reducers/configurationSlices/authSlice";
 import { useAppSelector } from "../../store/store";
 import CommonModal from "../components/CommonModal";
 import NormalSelect from "../components/NormalSelect";
@@ -23,10 +25,11 @@ const MainContentLayout = ({
   footer,
   Component,
 }: IMainContentLayoutProps) => {
-  const { userInformation } = useAppSelector(
+  const { userInformation, selectedBusinessUnit } = useAppSelector(
     (store) => store?.userSlice,
     shallowEqual
   );
+  const dispatch = useDispatch();
   const [openProfileModal, setOpenProfileModal] = React.useState(false);
   return (
     <>
@@ -47,11 +50,12 @@ const MainContentLayout = ({
                 <NormalSelect
                   width={200}
                   showSearch={true}
-                  allowClear={true}
+                  allowClear={false}
                   placeholder="Select Business Unit"
+                  value={selectedBusinessUnit}
                   options={userInformation?.permittedBusinessUnitDDL || []}
                   onChange={(valueOption) => {
-                    console.log(valueOption);
+                    dispatch(setSelectedBusinessUnit(valueOption));
                   }}
                 />
               </div>

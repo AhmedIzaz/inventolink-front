@@ -7,7 +7,10 @@ import Loading from "../../../../common/components/Loading";
 import { useAppDispatch, useAppSelector } from "../../../../store/store";
 import { IUserLoginDataset } from "../../../../interfaces/configurationInterfaces/userConfigurationInterfaces/userConfigurationInterfaces";
 import { useLoginMutation } from "../../../../store/queries/authApi";
-import { setUserInformation } from "../../../../store/reducers/configurationSlices/authSlice";
+import {
+  setSelectedBusinessUnit,
+  setUserInformation,
+} from "../../../../store/reducers/configurationSlices/authSlice";
 import CommonInput from "../../../../common/components/CommonInput";
 import CommonButton from "../../../../common/components/CommonButton";
 import { IValidationSchema } from "../../../../common/types/formTypes";
@@ -53,6 +56,11 @@ const LoginPage = () => {
                     values
                   ).unwrap();
                   dispatch(setUserInformation(responseData));
+                  dispatch(
+                    setSelectedBusinessUnit(
+                      responseData?.permittedBusinessUnitDDL?.[0] || null
+                    )
+                  );
                   router.push("/");
                   toast.success(message);
                 } catch (err) {
