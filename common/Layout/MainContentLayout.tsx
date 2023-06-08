@@ -49,7 +49,7 @@ const MainContentLayout = ({
                   showSearch={true}
                   allowClear={true}
                   placeholder="Select Business Unit"
-                  options={[{ label: "InventoLink", value: 1 }]}
+                  options={userInformation?.permittedBusinessUnitDDL || []}
                   onChange={(valueOption) => {
                     console.log(valueOption);
                   }}
