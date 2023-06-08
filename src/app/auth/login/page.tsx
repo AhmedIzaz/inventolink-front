@@ -18,7 +18,7 @@ import { isTokenExpired } from "../../../../store/api";
 import { toast } from "react-toastify";
 
 const LoginPage = () => {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
   const { userInformation } = useAppSelector(
     (store) => store?.userSlice,
     shallowEqual
