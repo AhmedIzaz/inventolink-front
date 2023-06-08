@@ -15,6 +15,8 @@ interface NormalSelectPropsType {
   options?: IDDLOption[] | [];
   clearIcon?: boolean;
   allowClear?: boolean;
+  value?: IDDLOption | IDDLOption[] | null;
+  mode?: "multiple" | "tags" | null;
 }
 
 const NormalSelect = ({
@@ -28,6 +30,8 @@ const NormalSelect = ({
   label,
   clearIcon,
   allowClear,
+  value,
+  mode,
 }: NormalSelectPropsType) => {
   return (
     <>
@@ -40,6 +44,8 @@ const NormalSelect = ({
         onChange={(_, valueOption) => {
           onChange?.(valueOption || null);
         }}
+        mode={mode}
+        value={value}
         onSearch={onSearch}
         filterOption={filterOption}
         options={options}
