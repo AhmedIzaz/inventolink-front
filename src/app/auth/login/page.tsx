@@ -16,7 +16,6 @@ import CommonButton from "../../../../common/components/CommonButton";
 import { IValidationSchema } from "../../../../common/types/formTypes";
 import { isTokenExpired } from "../../../../store/api";
 import { toast } from "react-toastify";
-
 const LoginPage = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const { userInformation } = useAppSelector(
@@ -38,7 +37,6 @@ const LoginPage = () => {
     }
     setLoading(false);
   }, []);
-
   return (
     <>
       {isLoading && <Loading />}
@@ -56,10 +54,10 @@ const LoginPage = () => {
                     values
                   ).unwrap();
                   dispatch(setUserInformation(responseData));
+                  const selectedBusinessUnit =
+                    responseData?.permittedBusinessUnitDDL?.[0];
                   dispatch(
-                    setSelectedBusinessUnit(
-                      responseData?.permittedBusinessUnitDDL?.[0] || null
-                    )
+                    setSelectedBusinessUnit(selectedBusinessUnit || null)
                   );
                   router.push("/");
                   toast.success(message);

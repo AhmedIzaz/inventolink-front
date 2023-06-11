@@ -1,11 +1,6 @@
 "use client";
 import { Layout, theme } from "antd";
 import { useEffect, useState } from "react";
-import {
-  HomeOutlined,
-  SettingOutlined,
-  ShoppingCartOutlined,
-} from "@ant-design/icons";
 import MainContentLayout from "./MainContentLayout";
 import MainNavigationLayout, { MenuItem } from "./MainNavigationLayout";
 import Head from "next/head";
@@ -17,45 +12,17 @@ import { toast } from "react-toastify";
 import Axios from "axios";
 import { setUserInformation } from "../../store/reducers/configurationSlices/authSlice";
 import Loading from "../components/Loading";
+import { useGetPermittedMenusQuery } from "../../store/queries/authApi";
+import { checkIsTokenExpired, setDisplaySize } from "./helper";
 
 interface IMainLayoutProps {
   Component: React.ReactNode;
   footer?: React.ReactNode;
 }
 
-interface IGetMenuItemProps {
-  label: React.ReactNode;
-  key: React.Key;
-  icon?: React.ReactNode;
-  children?: MenuItem[];
-  onClick?: (menuItem: MenuItem) => void;
-  title?: string;
-  path?: string;
-}
-
-const getItem = ({
-  label,
-  key,
-  icon,
-  children,
-  onClick,
-  title,
-  path,
-}: IGetMenuItemProps): MenuItem & { path?: string } => {
-  return {
-    key,
-    icon,
-    children,
-    label,
-    onClick,
-    title,
-    path,
-  };
-};
-
 const MainLayout = ({ Component, footer }: IMainLayoutProps) => {
   const [loading, setLoading] = useState(true);
-  const { userInformation } = useAppSelector(
+  const { userInformation, selectedBusinessUnit } = useAppSelector(
     (store) => store?.userSlice,
     shallowEqual
   );
@@ -67,106 +34,14 @@ const MainLayout = ({ Component, footer }: IMainLayoutProps) => {
     null
   );
   const [pageTitle, setPageTitle] = useState<string>("");
+
   const {
     token: { colorBgContainer },
   } = theme.useToken();
   const [mediumScreen, setMediumScreen] = useState(false);
-  useEffect(() => {
-    const items: MenuItem[] = [
-      getItem({
-        label: "Home",
-        title: "Home",
-        key: "1",
-        icon: <HomeOutlined />,
-        path: "/",
-      }),
-      getItem({
-        label: "Procurement",
-        key: "2",
-        icon: <ShoppingCartOutlined />,
 
-        children: [
-          getItem({
-            label: "Purchase",
-            key: "4",
-            children: [
-              getItem({
-                label: "Purchase Requisition",
-                key: "7",
-                title: "Purchase Requisition",
-              }),
-              getItem({
-                label: "Purchase Order",
-                key: "5",
-                title: "Purchase Order",
-              }),
-            ],
-          }),
-          getItem({
-            label: "Configuration",
-            key: "10",
-            children: [
-              getItem({ label: "Supplier", key: "11", title: "Supplier" }),
-            ],
-          }),
-          getItem({
-            label: "Reports",
-            key: "12",
-            children: [
-              getItem({
-                label: "PR Register",
-                key: "13",
-                title: "PR Register",
-              }),
-              getItem({
-                label: "PO Register",
-                key: "14",
-                title: "PO Register",
-              }),
-            ],
-          }),
-          getItem({
-            label: "Approval",
-            key: "15",
-            children: [
-              getItem({
-                label: "PR Approval",
-                key: "16",
-                title: "PR Approval",
-              }),
-              getItem({
-                label: "PO Approval",
-                key: "17",
-                title: "PO Approval",
-              }),
-            ],
-          }),
-        ],
-      }),
-      getItem({
-        label: "Inventory",
-        key: "3",
-        icon: <SettingOutlined />,
-        title: "Inventory",
-        path: "/inventory",
-      }),
-    ];
-    setMenuItems(items);
-    setSelectedMenuItem(items[0]);
-  }, []);
   useEffect(() => {
-    if (window.innerWidth > 800) {
-      setMediumScreen(true);
-    } else {
-      setMediumScreen(false);
-    }
-    window.addEventListener("resize", (e: any) => {
-      if (e.target.innerWidth > 800) {
-        setMediumScreen(true);
-      } else {
-        setMediumScreen(false);
-      }
-    });
+    setDisplaySize({ window, setMediumScreen });
   }, []);
   Axios.interceptors.response.use(
     (response) => response,
@@ -180,23 +55,30 @@ const MainLayout = ({ Component, footer }: IMainLayoutProps) => {
     }
   );
   useEffect(() => {
-    if (userInformation?.token) {
-      const tokenExpired = isTokenExpired(userInformation?.token);
-      if (tokenExpired) {
-        toast.warn("Your session has expired, please login again");
-        dispatch(setUserInformation({}));
-        router.push("/auth/login");
-      }
-    } else {
-      router.push("/auth/login");
-      toast.warn("You are not logged in, please login");
-    }
-    setLoading(false);
+    checkIsTokenExpired({
+      userInformation,
+      dispatch,
+      setUserInformation,
+      router,
+      setLoading,
+    });
   }, [Component]);
   console.log(pageTitle);
+
+  const { data, isLoading } = useGetPermittedMenusQuery(
+    {
+      user_id: userInformation?.userInformation?.id,
+      business_unit_id: selectedBusinessUnit?.value,
+    },
+    {
+      refetchOnMountOrArgChange: true,
+      skip: !userInformation?.token,
+    }
+  );
+  console.log(data?.[0]);
   return (
     <>
-      {loading ? (
+      {loading || isLoading ? (
         <Loading />
       ) : (
         <Layout style={{ minHeight: "100vh" }}>
@@ -210,7 +92,7 @@ const MainLayout = ({ Component, footer }: IMainLayoutProps) => {
             colorBgContainer={colorBgContainer}
             setPageTitle={setPageTitle}
             mediumScreen={mediumScreen}
-            menuItems={menuItems}
+            menuItems={data}
             collapsed={collapsed}
             setCollapsed={setCollapsed}
           />

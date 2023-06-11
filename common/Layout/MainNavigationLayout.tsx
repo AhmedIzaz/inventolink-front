@@ -2,7 +2,9 @@
 import { Layout, Menu, MenuProps, Typography } from "antd";
 import { useRouter } from "next/navigation";
 import React from "react";
-export type MenuItem = Required<MenuProps>["items"][number];
+export type MenuItem = Required<MenuProps>["items"][number] & {
+  [key: string]: any;
+};
 const { Header, Sider } = Layout;
 interface IMainNavigationLayoutProps {
   mediumScreen?: boolean;
@@ -21,6 +23,7 @@ const MainNavigationLayout = ({
   setPageTitle,
 }: IMainNavigationLayoutProps) => {
   const router = useRouter();
+
   return (
     <>
       {!mediumScreen ? (

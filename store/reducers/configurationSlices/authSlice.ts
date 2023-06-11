@@ -18,4 +18,5 @@ const authSlice = createSlice({
 });
 
 export default authSlice;
-export const { setUserInformation, setSelectedBusinessUnit } = authSlice.actions;
+export const { setUserInformation, setSelectedBusinessUnit } =
+  authSlice.actions;

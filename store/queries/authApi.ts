@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { MenuItem } from "../../common/Layout/MainNavigationLayout";
 import { IUserLoginDataset } from "../../interfaces/configurationInterfaces/userConfigurationInterfaces/userConfigurationInterfaces";
 import { API_BASE_URL, commonPrepareHeader } from "../api";
 
@@ -8,7 +9,7 @@ export const authApi = createApi({
     baseUrl: API_BASE_URL,
     prepareHeaders: commonPrepareHeader,
   }),
-  endpoints: ({ mutation }) => ({
+  endpoints: ({ mutation, query }) => ({
     login: mutation<any, IUserLoginDataset>({
       query: (body) => ({
         url: "/configuration/user/login",
@@ -16,7 +17,19 @@ export const authApi = createApi({
         body,
       }),
     }),
+
+    getPermittedMenus: query<
+      MenuItem[],
+      { user_id?: number; business_unit_id?: number }
+    >({
+      query: (body) => ({
+        url: `/configuration/user/user-permitted-menu?user_id=${
+          body?.user_id || 0
+        }&business_unit_id=${body?.business_unit_id || 0}`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
-export const { useLoginMutation } = authApi;
+export const { useLoginMutation, useGetPermittedMenusQuery } = authApi;
