@@ -2,7 +2,9 @@
 import { Layout, Menu, MenuProps, Typography } from "antd";
 import { useRouter } from "next/navigation";
 import React from "react";
-export type MenuItem = Required<MenuProps>["items"][number];
+export type MenuItem = Required<MenuProps>["items"][number] & {
+  [key: string]: any;
+};
 const { Header, Sider } = Layout;
 interface IMainNavigationLayoutProps {
   mediumScreen?: boolean;
@@ -21,6 +23,7 @@ const MainNavigationLayout = ({
   setPageTitle,
 }: IMainNavigationLayoutProps) => {
   const router = useRouter();
+
   return (
     <>
       {!mediumScreen ? (
@@ -47,10 +50,12 @@ const MainNavigationLayout = ({
               defaultSelectedKeys={["1"]}
               mode="horizontal"
               items={menuItems}
-              onSelect={(value) => {
+              onSelect={(value: any) => {
                 console.log(value);
-                // in future inshallah
-                // Router.push(value?.route)
+                router.push(value?.item?.props?.path);
+                if (value) {
+                  setPageTitle(value?.item?.props?.title);
+                }
               }}
             />
           </div>
@@ -95,8 +100,6 @@ const MainNavigationLayout = ({
             items={menuItems}
             onSelect={(value: any) => {
               console.log(value);
-              // in future inshallah
-              // Router.push(value?.route)
               router.push(value?.item?.props?.path);
               if (value) {
                 setPageTitle(value?.item?.props?.title);
