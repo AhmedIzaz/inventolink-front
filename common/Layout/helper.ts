@@ -28,7 +28,7 @@ export const checkIsTokenExpired = ({
     if (tokenExpired) {
       toast.warn("Your session has expired, please login again");
       dispatch?.(setUserInformation?.({}));
-      router.push("/auth/login");
+      router?.push("/auth/login");
     }
   } else {
     router?.push("/auth/login");

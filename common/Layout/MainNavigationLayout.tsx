@@ -50,10 +50,12 @@ const MainNavigationLayout = ({
               defaultSelectedKeys={["1"]}
               mode="horizontal"
               items={menuItems}
-              onSelect={(value) => {
+              onSelect={(value: any) => {
                 console.log(value);
-                // in future inshallah
-                // Router.push(value?.route)
+                router.push(value?.item?.props?.path);
+                if (value) {
+                  setPageTitle(value?.item?.props?.title);
+                }
               }}
             />
           </div>
@@ -98,8 +100,6 @@ const MainNavigationLayout = ({
             items={menuItems}
             onSelect={(value: any) => {
               console.log(value);
-              // in future inshallah
-              // Router.push(value?.route)
               router.push(value?.item?.props?.path);
               if (value) {
                 setPageTitle(value?.item?.props?.title);

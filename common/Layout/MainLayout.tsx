@@ -43,17 +43,7 @@ const MainLayout = ({ Component, footer }: IMainLayoutProps) => {
   useEffect(() => {
     setDisplaySize({ window, setMediumScreen });
   }, []);
-  Axios.interceptors.response.use(
-    (response) => response,
-    (error) => {
-      if (error.response.status === 401) {
-        toast.warn("You are not authorized to access this page. Log in first");
-        dispatch(setUserInformation({}));
-        router.push("/auth/login");
-      }
-      return Promise.reject(error);
-    }
-  );
+
   useEffect(() => {
     checkIsTokenExpired({
       userInformation,
@@ -63,7 +53,6 @@ const MainLayout = ({ Component, footer }: IMainLayoutProps) => {
       setLoading,
     });
   }, [Component]);
-  console.log(pageTitle);
 
   const { data, isLoading } = useGetPermittedMenusQuery(
     {
@@ -75,7 +64,17 @@ const MainLayout = ({ Component, footer }: IMainLayoutProps) => {
       skip: !userInformation?.token,
     }
   );
-  console.log(data?.[0]);
+  Axios.interceptors.response.use(
+    (response) => response,
+    (error) => {
+      if (error.response.status === 401) {
+        toast.warn("You are not authorized to access this page. Log in first");
+        dispatch(setUserInformation({}));
+        router.push("/auth/login");
+      }
+      return Promise.reject(error);
+    }
+  );
   return (
     <>
       {loading || isLoading ? (
