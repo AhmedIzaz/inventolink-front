@@ -9,6 +9,7 @@ export default function Home() {
     (store) => store?.userSlice,
     shallowEqual
   );
+
   useEffect(() => {
     if (userInformation?.token) {
       Axios.defaults.headers.common[
