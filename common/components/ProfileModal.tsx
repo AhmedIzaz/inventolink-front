@@ -1,7 +1,10 @@
 import { EditOutlined } from "@ant-design/icons";
 import { Image } from "antd";
 import { useRouter } from "next/navigation";
-import { setUserInformation } from "../../store/reducers/configurationSlices/authSlice";
+import {
+  setAuthSlice,
+  setUserInformation,
+} from "../../store/reducers/configurationSlices/authSlice";
 import { useAppDispatch } from "../../store/store";
 import CommonButton from "./CommonButton";
 
@@ -41,6 +44,7 @@ const ProfileComponent = ({ employeeInformation, onClose }) => {
           danger
           onClick={() => {
             dispatch(setUserInformation({}));
+            dispatch(setAuthSlice({}));
             onClose?.();
             router.push("/auth/login");
           }}

@@ -8,7 +8,7 @@ export const setDisplaySize = ({ window, setMediumScreen }) => {
     setMediumScreen?.(false);
   }
   window?.addEventListener("resize", (e: any) => {
-    if (e.target.innerWidth > 800) {
+    if (e.target.innerWidth > 1024) {
       setMediumScreen?.(true);
     } else {
       setMediumScreen?.(false);

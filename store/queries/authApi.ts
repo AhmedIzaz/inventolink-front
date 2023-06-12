@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { MenuItem } from "../../common/Layout/MainNavigationLayout";
 import { IUserLoginDataset } from "../../interfaces/configurationInterfaces/userConfigurationInterfaces/userConfigurationInterfaces";
+import { getIconForMenu } from "../../utils/iconUtils";
 import { API_BASE_URL, commonPrepareHeader } from "../api";
 
 export const authApi = createApi({
@@ -28,8 +29,13 @@ export const authApi = createApi({
         }&business_unit_id=${body?.business_unit_id || 0}`,
         method: "GET",
       }),
+      transformResponse: (response: MenuItem[]) => {
+        return response?.map((item) => ({
+          ...item,
+          icon: getIconForMenu(item?.label),
+        }));
+      },
     }),
   }),
 });
-
 export const { useLoginMutation, useGetPermittedMenusQuery } = authApi;

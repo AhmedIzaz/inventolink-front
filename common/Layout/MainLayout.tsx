@@ -2,11 +2,10 @@
 import { Layout, theme } from "antd";
 import { useEffect, useState } from "react";
 import MainContentLayout from "./MainContentLayout";
-import MainNavigationLayout, { MenuItem } from "./MainNavigationLayout";
+import MainNavigationLayout from "./MainNavigationLayout";
 import Head from "next/head";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import { shallowEqual } from "react-redux";
-import { isTokenExpired } from "../../store/api";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import Axios from "axios";
@@ -29,10 +28,7 @@ const MainLayout = ({ Component, footer }: IMainLayoutProps) => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const [collapsed, setCollapsed] = useState(false);
-  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
-  const [selectedMenuItem, setSelectedMenuItem] = useState<MenuItem | null>(
-    null
-  );
+
   const [pageTitle, setPageTitle] = useState<string>("");
 
   const {
@@ -98,6 +94,7 @@ const MainLayout = ({ Component, footer }: IMainLayoutProps) => {
           <MainContentLayout
             footer={footer}
             pageTitle={pageTitle}
+            setPageTitle={setPageTitle}
             Component={Component}
             mediumScreen={mediumScreen}
             collapsed={collapsed}

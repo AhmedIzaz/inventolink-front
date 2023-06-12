@@ -6,6 +6,7 @@ export type MenuItem = Required<MenuProps>["items"][number] & {
   [key: string]: any;
 };
 const { Header, Sider } = Layout;
+export const { Content: CommonContainer } = Layout;
 interface IMainNavigationLayoutProps {
   mediumScreen?: boolean;
   collapsed?: boolean;
@@ -23,7 +24,6 @@ const MainNavigationLayout = ({
   setPageTitle,
 }: IMainNavigationLayoutProps) => {
   const router = useRouter();
-
   return (
     <>
       {!mediumScreen ? (
