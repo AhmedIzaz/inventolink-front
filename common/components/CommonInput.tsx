@@ -27,7 +27,7 @@ const CommonInput = forwardRef(
       >
         <Input
           type={rest?.type || "text"}
-          size={rest?.size || "middle"}
+          size={rest?.size}
           {...rest}
           ref={ref}
         />

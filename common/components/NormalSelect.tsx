@@ -1,4 +1,4 @@
-import { Form, Select } from "antd";
+import { ColProps, Form, Select } from "antd";
 import { Rule } from "antd/es/form";
 import { InputStatus } from "antd/es/_util/statusUtils";
 import React from "react";
@@ -23,6 +23,8 @@ interface NormalSelectPropsType {
   mode?: "multiple" | "tags" | null;
   status?: InputStatus;
   className?: string;
+  labelCol?: ColProps;
+  style?: React.CSSProperties;
 }
 
 const NormalSelect = ({
@@ -41,14 +43,23 @@ const NormalSelect = ({
   status,
   rules,
   name,
-  className
+  className,
+  labelCol,
+  style,
 }: NormalSelectPropsType) => {
   return (
     <>
-      <Form.Item label={label} name={name} rules={rules} className={className}>
+      <Form.Item
+        label={label}
+        name={name}
+        rules={rules}
+        className={className}
+        labelCol={labelCol}
+        style={{ margin: "0 !important", padding: "0 !important", ...style }}
+      >
         <Select
           showSearch={showSearch || false}
-          style={{ width: width || 350 }}
+          style={{ width: width || "100%" }}
           placeholder={placeholder || ""}
           optionFilterProp="children"
           onChange={(_, valueOption) => {

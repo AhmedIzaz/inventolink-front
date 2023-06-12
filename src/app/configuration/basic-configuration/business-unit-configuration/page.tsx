@@ -1,3 +1,5 @@
+"use client";
+import { Form } from "antd";
 import React from "react";
 import CommonInput from "../../../../../common/components/CommonInput";
 import NormalSelect from "../../../../../common/components/NormalSelect";
@@ -7,50 +9,74 @@ const BusinessUnitConfiguration = () => {
   const [form, setForm] = React.useState({
     businessUnitName: "",
     address: "",
-    baseCurrency: "",
-    language: "",
+    baseCurrency: null,
+    language: null,
   });
   return (
     <>
-      <CommonContainer className=" bg-white my-2">
-        <div className=" grid md:grid-flow-col gap-2">
-          <div className="lg:col-span-4">
-            <CommonInput
-              type="text"
-              required
-              title="Business Unit Name"
-              value={form.businessUnitName}
-              onChange={(e) => {
-                setForm((prev) => ({
-                  ...prev,
-                  businessUnitName: e.target.value,
-                }));
-              }}
-              rules={rules.businessUnitName}
-            />
+      <CommonContainer className=" bg-white my-2 p-2">
+        <Form layout="vertical">
+          <div className=" grid md:grid-flow-col gap-4">
+            <div className="lg:col-span-4">
+              <CommonInput
+                type="text"
+                required={true}
+                label="Business Unit Name"
+                value={form?.businessUnitName}
+                onChange={(e) => {
+                  setForm((prev) => ({
+                    ...prev,
+                    businessUnitName: e.target.value,
+                  }));
+                }}
+                rules={rules.businessUnitName}
+                inputcontainerclassname="mb-0 w-full"
+              />
+            </div>
+            <div className="lg:col-span-4">
+              <CommonInput
+                type="text"
+                required={true}
+                label="Address"
+                value={form?.address}
+                onChange={(e) => {
+                  setForm((prev) => ({
+                    ...prev,
+                    address: e.target.value,
+                  }));
+                }}
+                inputcontainerclassname="mb-0"
+              />
+            </div>
+            <div className="lg:col-span-4">
+              <NormalSelect
+                showSearch={true}
+                allowClear={false}
+                label="Select Currency"
+                value={form?.baseCurrency}
+                options={[]}
+                onChange={(valueOption) => {
+                  setForm((prev) => ({ ...prev, baseCurrency: valueOption }));
+                }}
+                style={{marginBottom:0}}
+              />
+            </div>
+            <div className="lg:col-span-4">
+              <NormalSelect
+                showSearch={true}
+                allowClear={false}
+                placeholder=""
+                label="Select Language"
+                value={form?.language}
+                options={[]}
+                onChange={(valueOption) => {
+                  setForm((prev) => ({ ...prev, language: valueOption }));
+                }}
+                style={{marginBottom:0}}
+              />
+            </div>
           </div>
-          <div className="lg:col-span-4">
-            <CommonInput
-              type="text"
-              required
-              title="Address"
-              value={form.address}
-              onChange={(e) => {
-                setForm((prev) => ({
-                  ...prev,
-                  address: e.target.value,
-                }));
-              }}
-            />
-          </div>
-          <div className="lg:col-span-4">
-            {/* <NormalSelect 
-              status=""
-            
-            /> */}
-          </div>
-          <div className="lg:col-span-4"></div>
-        </div>
+        </Form>
       </CommonContainer>
     </>
   );
