@@ -1,5 +1,7 @@
 import { toast } from "react-toastify";
 import { isTokenExpired } from "../../store/api";
+import { setPermittedMenus } from "../../store/reducers/configurationSlices/authSlice";
+import { getIconForMenu } from "../../utils/iconUtils";
 
 export const setDisplaySize = ({ window, setMediumScreen }) => {
   if (window?.innerWidth > 800) {
@@ -35,4 +37,24 @@ export const checkIsTokenExpired = ({
     toast.warn("You are not logged in, please login");
   }
   setLoading?.(false);
+};
+
+export const onGetPermittedMenuList = ({
+  getUserPermittedMenu,
+  userId,
+  businessUnitId,
+  dispatch,
+}) => {
+  getUserPermittedMenu?.(
+    `/configuration/user/user-permitted-menu?user_id=${
+      userId || 0
+    }&business_unit_id=${businessUnitId || 0}`,
+    (res) => {
+      const modifiedUserPermittedMenu = res?.map((item) => ({
+        ...item,
+        icon: getIconForMenu(item?.label),
+      }));
+      dispatch(setPermittedMenus(modifiedUserPermittedMenu));
+    }
+  );
 };

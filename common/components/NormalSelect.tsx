@@ -2,9 +2,10 @@ import { ColProps, Form, Select } from "antd";
 import { Rule } from "antd/es/form";
 import { InputStatus } from "antd/es/_util/statusUtils";
 import React from "react";
-interface IDDLOption {
+export interface IDDLOption {
   label?: string;
   value?: number;
+  [key: string]: any;
 }
 interface NormalSelectPropsType {
   showSearch?: boolean;
