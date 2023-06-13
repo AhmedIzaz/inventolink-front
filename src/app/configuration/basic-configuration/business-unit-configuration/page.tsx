@@ -14,10 +14,10 @@ const BusinessUnitConfiguration = () => {
   });
   return (
     <>
-      <CommonContainer className=" bg-white my-2 p-2">
+      <CommonContainer className=" bg-white my-2 p-2 rounded-lg">
         <Form layout="vertical">
-          <div className=" grid md:grid-flow-col gap-4">
-            <div className="lg:col-span-4">
+          <div className=" grid md:grid-cols-12 md:grid-flow-col gap-4">
+            <div className="md:col-span-3">
               <CommonInput
                 type="text"
                 required={true}
@@ -30,10 +30,10 @@ const BusinessUnitConfiguration = () => {
                   }));
                 }}
                 rules={rules.businessUnitName}
-                inputcontainerclassname="mb-0 w-full"
+                inputcontainerclassname="mb-0"
               />
             </div>
-            <div className="lg:col-span-4">
+            <div className="md:col-span-3">
               <CommonInput
                 type="text"
                 required={true}
@@ -48,7 +48,7 @@ const BusinessUnitConfiguration = () => {
                 inputcontainerclassname="mb-0"
               />
             </div>
-            <div className="lg:col-span-4">
+            <div className="md:col-span-3">
               <NormalSelect
                 showSearch={true}
                 allowClear={false}
@@ -58,10 +58,9 @@ const BusinessUnitConfiguration = () => {
                 onChange={(valueOption) => {
                   setForm((prev) => ({ ...prev, baseCurrency: valueOption }));
                 }}
-                style={{marginBottom:0}}
               />
             </div>
-            <div className="lg:col-span-4">
+            <div className="md:col-span-3">
               <NormalSelect
                 showSearch={true}
                 allowClear={false}
@@ -72,7 +71,6 @@ const BusinessUnitConfiguration = () => {
                 onChange={(valueOption) => {
                   setForm((prev) => ({ ...prev, language: valueOption }));
                 }}
-                style={{marginBottom:0}}
               />
             </div>
           </div>

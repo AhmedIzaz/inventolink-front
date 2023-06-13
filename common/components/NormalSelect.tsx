@@ -55,7 +55,7 @@ const NormalSelect = ({
         rules={rules}
         className={className}
         labelCol={labelCol}
-        style={{ margin: "0 !important", padding: "0 !important", ...style }}
+        style={{ margin: "0", padding: "0", ...style }}
       >
         <Select
           showSearch={showSearch || false}
