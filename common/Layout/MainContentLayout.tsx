@@ -1,5 +1,6 @@
 "use client";
 import { Button, Image, Layout, Typography } from "antd";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { useDispatch } from "react-redux";
 import { shallowEqual } from "react-redux";
@@ -14,6 +15,7 @@ interface IMainContentLayoutProps {
   collapsed?: boolean;
   colorBgContainer?: string;
   pageTitle?: string;
+  setPageTitle?: React.Dispatch<React.SetStateAction<string>>;
   footer?: React.ReactNode;
   Component?: React.ReactNode;
 }
@@ -22,6 +24,7 @@ const MainContentLayout = ({
   collapsed,
   colorBgContainer,
   pageTitle,
+  setPageTitle,
   footer,
   Component,
 }: IMainContentLayoutProps) => {
@@ -29,6 +32,7 @@ const MainContentLayout = ({
     (store) => store?.userSlice,
     shallowEqual
   );
+  const router = useRouter();
   const dispatch = useDispatch();
   const [openProfileModal, setOpenProfileModal] = React.useState(false);
   return (
@@ -38,12 +42,12 @@ const MainContentLayout = ({
         style={{ marginLeft: !mediumScreen ? 0 : !collapsed ? 250 : 80 }}
       >
         <Header
-          className=" sticky top-0  p-0 overflow-hidden z-10"
+          className=" sticky top-0  p-0 overflow-hidden z-10 h-fit py-2"
           style={{ background: colorBgContainer }}
         >
           <div className="flex place-items-center justify-between mx-2">
             <div>
-              <Typography.Title level={5}>{pageTitle || ""}</Typography.Title>
+              <Typography.Title style={{marginBottom:0}} level={5}>{pageTitle || ""}</Typography.Title>
             </div>
             <div className=" flex-1 flex place-items-center justify-end ">
               <div className="">
@@ -56,7 +60,10 @@ const MainContentLayout = ({
                   options={userInformation?.permittedBusinessUnitDDL || []}
                   onChange={(valueOption) => {
                     dispatch(setSelectedBusinessUnit(valueOption));
+                    setPageTitle("");
+                    router.push("/");
                   }}
+                  className="mb-0"
                 />
               </div>
               <Button
