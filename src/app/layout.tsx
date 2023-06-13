@@ -5,7 +5,6 @@ import Axios from "axios";
 import { usePathname } from "next/navigation";
 import MainLayout from "../../common/Layout/MainLayout";
 import { ToastContainer } from "react-toastify";
-
 export default function RootLayout({
   children,
 }: {
@@ -14,8 +13,10 @@ export default function RootLayout({
   const pathname = usePathname();
   Axios.defaults.baseURL =
     process.env.NODE_ENV === "development"
-      ? process.env.REACT_APP_DEV_BASE_URL
-      : process.env.REACT_APP_BASE_URL;
+      ? // ? process.env.REACT_APP_DEV_BASE_URL
+        "http://localhost:4000"
+      : // : process.env.REACT_APP_BASE_URL;
+        "http://link.invento.com";
 
   return (
     <html lang="en">
@@ -29,6 +30,7 @@ export default function RootLayout({
             )}
           </>
         </Providers>
+
         <ToastContainer position="bottom-right" />
       </body>
     </html>

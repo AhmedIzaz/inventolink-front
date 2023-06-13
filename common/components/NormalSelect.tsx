@@ -1,8 +1,11 @@
-import { Select } from "antd";
+import { ColProps, Form, Select } from "antd";
+import { Rule } from "antd/es/form";
+import { InputStatus } from "antd/es/_util/statusUtils";
 import React from "react";
-interface IDDLOption {
+export interface IDDLOption {
   label?: string;
   value?: number;
+  [key: string]: any;
 }
 interface NormalSelectPropsType {
   showSearch?: boolean;
@@ -11,12 +14,18 @@ interface NormalSelectPropsType {
   onChange?: (value: IDDLOption | IDDLOption[] | null) => void;
   onSearch?: (value: string) => void;
   label?: string;
+  name?: string;
+  rules?: Rule[];
   filterOption?: boolean | ((inputValue?: string, option?: any) => boolean);
   options?: IDDLOption[] | [];
   clearIcon?: boolean;
   allowClear?: boolean;
   value?: IDDLOption | IDDLOption[] | null;
   mode?: "multiple" | "tags" | null;
+  status?: InputStatus;
+  className?: string;
+  labelCol?: ColProps;
+  style?: React.CSSProperties;
 }
 
 const NormalSelect = ({
@@ -32,26 +41,41 @@ const NormalSelect = ({
   allowClear,
   value,
   mode,
+  status,
+  rules,
+  name,
+  className,
+  labelCol,
+  style,
 }: NormalSelectPropsType) => {
   return (
     <>
-      {label ? <label>{label}</label> : <></>}
-      <Select
-        showSearch={showSearch || false}
-        style={{ width: width || 350 }}
-        placeholder={placeholder || ""}
-        optionFilterProp="children"
-        onChange={(_, valueOption) => {
-          onChange?.(valueOption || null);
-        }}
-        mode={mode}
-        value={value}
-        onSearch={onSearch}
-        filterOption={filterOption}
-        options={options}
-        clearIcon={clearIcon}
-        allowClear={allowClear}
-      />
+      <Form.Item
+        label={label}
+        name={name}
+        rules={rules}
+        className={className}
+        labelCol={labelCol}
+        style={{ margin: "0", padding: "0", ...style }}
+      >
+        <Select
+          showSearch={showSearch || false}
+          style={{ width: width || "100%" }}
+          placeholder={placeholder || ""}
+          optionFilterProp="children"
+          onChange={(_, valueOption) => {
+            onChange?.(valueOption || null);
+          }}
+          mode={mode}
+          value={value}
+          onSearch={onSearch}
+          filterOption={filterOption}
+          options={options}
+          clearIcon={clearIcon}
+          allowClear={allowClear}
+          status={status}
+        />
+      </Form.Item>
     </>
   );
 };
