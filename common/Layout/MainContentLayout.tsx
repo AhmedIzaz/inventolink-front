@@ -35,6 +35,7 @@ const MainContentLayout = ({
   const router = useRouter();
   const dispatch = useDispatch();
   const [openProfileModal, setOpenProfileModal] = React.useState(false);
+
   return (
     <>
       <Layout
@@ -47,7 +48,9 @@ const MainContentLayout = ({
         >
           <div className="flex place-items-center justify-between mx-2">
             <div>
-              <Typography.Title style={{marginBottom:0}} level={5}>{pageTitle || ""}</Typography.Title>
+              <Typography.Title style={{ marginBottom: 0 }} level={5}>
+                {pageTitle || ""}
+              </Typography.Title>
             </div>
             <div className=" flex-1 flex place-items-center justify-end ">
               <div className="">
