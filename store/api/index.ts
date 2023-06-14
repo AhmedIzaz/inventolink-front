@@ -11,7 +11,6 @@ export const commonPrepareHeader = (
 ): MaybePromise<Headers | void> => {
   const token = getState().authSlice?.userInformation?.token;
   if (token) {
-    console.log("token", token);
     headers.set("Authorization", `Bearer ${token}`);
   }
   return headers;
