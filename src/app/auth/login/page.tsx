@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import Loading from "../../../../common/components/Loading";
 import { useAppDispatch, useAppSelector } from "../../../../store/store";
 import { IUserLoginDataset } from "../../../../interfaces/configurationInterfaces/userConfigurationInterfaces/userConfigurationInterfaces";
-import { useLoginMutation } from "../../../../store/queries/authApi";
 import {
   setSelectedBusinessUnit,
   setUserInformation,
@@ -14,8 +13,8 @@ import {
 import CommonInput from "../../../../common/components/CommonInput";
 import CommonButton from "../../../../common/components/CommonButton";
 import { IValidationSchema } from "../../../../common/types/formTypes";
-import { isTokenExpired } from "../../../../store/api";
 import { toast } from "react-toastify";
+import useAxiosPost from "../../../../common/customHooks/useAxiosPost";
 const LoginPage = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const { userInformation } = useAppSelector(
@@ -28,10 +27,9 @@ const LoginPage = () => {
     email: "",
     password: "",
   });
-  const [login, { isLoading }] = useLoginMutation();
-
+  const [, loginRequest, , loadingOnLogin] = useAxiosPost();
   useEffect(() => {
-    if (userInformation?.token && !isTokenExpired(userInformation?.token)) {
+    if (userInformation?.token) {
       toast.warning("You are already logged in");
       return router.push("/");
     }
@@ -39,7 +37,7 @@ const LoginPage = () => {
   }, []);
   return (
     <>
-      {isLoading && <Loading />}
+      {loadingOnLogin && <Loading />}
       {loading ? (
         <Loading />
       ) : (
@@ -50,9 +48,11 @@ const LoginPage = () => {
               layout="vertical"
               onFinish={async (values) => {
                 try {
-                  const { message, ...responseData } = await login(
-                    values
-                  ).unwrap();
+                  const { message, ...responseData } = await loginRequest({
+                    url: "/configuration/user/login",
+                    payload: values,
+                    requestType: "post",
+                  });
                   dispatch(setUserInformation(responseData));
                   const selectedBusinessUnit =
                     responseData?.permittedBusinessUnitDDL?.[0];
@@ -62,7 +62,8 @@ const LoginPage = () => {
                   router.push("/");
                   toast.success(message);
                 } catch (err) {
-                  toast.error(err?.data?.message);
+                  console.log(err);
+                  toast.error(err?.message);
                 }
               }}
             >

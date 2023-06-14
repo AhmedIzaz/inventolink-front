@@ -7,7 +7,6 @@ import Head from "next/head";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import { shallowEqual } from "react-redux";
 import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
 import Axios from "axios";
 import { setUserInformation } from "../../store/reducers/configurationSlices/authSlice";
 import Loading from "../components/Loading";
@@ -17,13 +16,24 @@ import {
   setDisplaySize,
 } from "./helper";
 import useAxiosGet from "../customHooks/useAxiosGet";
-
+import { toast } from "react-toastify";
 interface IMainLayoutProps {
   Component: React.ReactNode;
   footer?: React.ReactNode;
 }
 
 const MainLayout = ({ Component, footer }: IMainLayoutProps) => {
+  Axios.interceptors.response.use(
+    (response) => response,
+    (error) => {
+      if (error.response.status === 401) {
+        dispatch(setUserInformation({}));
+        toast.warn("You are not authorized to access this page. Log in first");
+        router.push("/auth/login");
+      }
+      return Promise.reject(error);
+    }
+  );
   const [loading, setLoading] = useState(true);
   const { userInformation, selectedBusinessUnit, permittedMenus } =
     useAppSelector((store) => store?.userSlice, shallowEqual);
@@ -43,6 +53,26 @@ const MainLayout = ({ Component, footer }: IMainLayoutProps) => {
   }, []);
 
   useEffect(() => {
+    if (userInformation?.token) {
+      Axios.defaults.headers.common[
+        "Authorization"
+      ] = `Bearer ${userInformation?.token}`;
+    } else {
+      Axios.defaults.headers.common["Authorization"] = ``;
+    }
+  }, [userInformation]);
+  useEffect(() => {
+    if (userInformation?.token && selectedBusinessUnit?.value) {
+      onGetPermittedMenuList({
+        getUserPermittedMenu,
+        userId: userInformation?.userInformation?.id,
+        businessUnitId: selectedBusinessUnit?.value,
+        dispatch,
+      });
+    }
+  }, [userInformation, selectedBusinessUnit]);
+
+  useEffect(() => {
     checkIsTokenExpired({
       userInformation,
       dispatch,
@@ -50,35 +80,7 @@ const MainLayout = ({ Component, footer }: IMainLayoutProps) => {
       router,
       setLoading,
     });
-  }, [Component]);
-
-  useEffect(() => {
-    onGetPermittedMenuList({
-      getUserPermittedMenu,
-      userId: userInformation?.userInformation?.id,
-      businessUnitId: selectedBusinessUnit?.value,
-      dispatch,
-    });
-  }, [userInformation, selectedBusinessUnit]);
-
-  Axios.interceptors.response.use(
-    (response) => response,
-    (error) => {
-      if (error.response.status === 401) {
-        toast.warn("You are not authorized to access this page. Log in first");
-        dispatch(setUserInformation({}));
-        router.push("/auth/login");
-      }
-      return Promise.reject(error);
-    }
-  );
-  useEffect(() => {
-    if (userInformation?.token) {
-      Axios.defaults.headers.common[
-        "Authorization"
-      ] = `Bearer ${userInformation?.token}`;
-    }
-  }, [userInformation]);
+  }, [Component, userInformation]);
   return (
     <>
       {loading || loadingOnGetUserPermittedMenu ? (
