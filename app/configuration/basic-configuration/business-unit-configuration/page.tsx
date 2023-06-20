@@ -1,16 +1,14 @@
 "use client";
+import CommonButton from "@common/components/CommonButton";
+import CommonInput from "@common/components/CommonInput";
+import Loading from "@common/components/Loading";
+import NormalSelect, { IDDLOption } from "@common/components/NormalSelect";
+import useAxiosGet from "@common/customHooks/useAxiosGet";
+import { CommonContainer } from "@common/Layout/MainNavigationLayout";
+import { IValidationSchema } from "@common/types/formTypes";
 import { Form } from "antd";
 import { useForm } from "antd/es/form/Form";
 import React, { useEffect } from "react";
-import CommonButton from "../../../../../common/components/CommonButton";
-import CommonInput from "../../../../../common/components/CommonInput";
-import Loading from "../../../../../common/components/Loading";
-import NormalSelect, {
-  IDDLOption,
-} from "../../../../../common/components/NormalSelect";
-import useAxiosGet from "../../../../../common/customHooks/useAxiosGet";
-import { CommonContainer } from "../../../../../common/Layout/MainNavigationLayout";
-import { IValidationSchema } from "../../../../../common/types/formTypes";
 
 const initialValues = {
   businessUnitName: "",

@@ -1,10 +1,10 @@
 "use client";
 import "./globals.css";
-import Providers from "../redux/providers";
 import Axios from "axios";
 import { usePathname } from "next/navigation";
-import MainLayout from "../../common/Layout/MainLayout";
 import { ToastContainer } from "react-toastify";
+import MainLayout from "@common/Layout/MainLayout";
+import Providers from "@store/redux/providers";
 export default function RootLayout({
   children,
 }: {
