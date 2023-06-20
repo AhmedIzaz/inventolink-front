@@ -3,18 +3,18 @@ import React, { useEffect, useState } from "react";
 import { Form } from "antd";
 import { shallowEqual } from "react-redux";
 import { useRouter } from "next/navigation";
-import Loading from "../../../../common/components/Loading";
-import { useAppDispatch, useAppSelector } from "../../../../store/store";
-import { IUserLoginDataset } from "../../../../interfaces/configurationInterfaces/userConfigurationInterfaces/userConfigurationInterfaces";
+import { toast } from "react-toastify";
+import { useAppDispatch, useAppSelector } from "@store/store";
+import { IUserLoginDataset } from "@interfaces/configurationInterfaces/userConfigurationInterfaces/userConfigurationInterfaces";
+import useAxiosPost from "@common/customHooks/useAxiosPost";
+import Loading from "@common/components/Loading";
 import {
   setSelectedBusinessUnit,
   setUserInformation,
-} from "../../../../store/reducers/configurationSlices/authSlice";
-import CommonInput from "../../../../common/components/CommonInput";
-import CommonButton from "../../../../common/components/CommonButton";
-import { IValidationSchema } from "../../../../common/types/formTypes";
-import { toast } from "react-toastify";
-import useAxiosPost from "../../../../common/customHooks/useAxiosPost";
+} from "@store/reducers/configurationSlices/authSlice";
+import CommonInput from "@common/components/CommonInput";
+import CommonButton from "@common/components/CommonButton";
+import { IValidationSchema } from "@common/types/formTypes";
 const LoginPage = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const { userInformation } = useAppSelector(

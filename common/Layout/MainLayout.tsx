@@ -1,22 +1,22 @@
 "use client";
 import { Layout, theme } from "antd";
 import { useEffect, useState } from "react";
-import MainContentLayout from "./MainContentLayout";
-import MainNavigationLayout, { MenuItem } from "./MainNavigationLayout";
 import Head from "next/head";
-import { useAppDispatch, useAppSelector } from "../../store/store";
 import { shallowEqual } from "react-redux";
 import { useRouter } from "next/navigation";
 import Axios from "axios";
-import { setUserInformation } from "../../store/reducers/configurationSlices/authSlice";
-import Loading from "../components/Loading";
+import { toast } from "react-toastify";
+import { setUserInformation } from "@store/reducers/configurationSlices/authSlice";
+import { useAppDispatch, useAppSelector } from "@store/store";
+import MainNavigationLayout, { MenuItem } from "./MainNavigationLayout";
+import useAxiosGet from "@common/customHooks/useAxiosGet";
 import {
   checkIsTokenExpired,
   onGetPermittedMenuList,
   setDisplaySize,
 } from "./helper";
-import useAxiosGet from "../customHooks/useAxiosGet";
-import { toast } from "react-toastify";
+import Loading from "@common/components/Loading";
+import MainContentLayout from "./MainContentLayout";
 interface IMainLayoutProps {
   Component: React.ReactNode;
   footer?: React.ReactNode;
