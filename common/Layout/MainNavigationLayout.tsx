@@ -51,7 +51,6 @@ const MainNavigationLayout = ({
               mode="horizontal"
               items={menuItems}
               onSelect={(value: any) => {
-                console.log(value);
                 router.push(value?.item?.props?.path);
                 if (value) {
                   setPageTitle(value?.item?.props?.title);
@@ -99,7 +98,6 @@ const MainNavigationLayout = ({
             mode="vertical"
             items={menuItems}
             onSelect={(value: any) => {
-              console.log(value);
               router.push(value?.item?.props?.path);
               if (value) {
                 setPageTitle(value?.item?.props?.title);
