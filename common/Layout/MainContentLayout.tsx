@@ -1,4 +1,5 @@
 "use client";
+import { setPageTitle } from "@store/reducers/appUtilitySlices";
 import { Button, Image, Layout, Typography } from "antd";
 import { useRouter } from "next/navigation";
 import React from "react";
@@ -14,8 +15,6 @@ interface IMainContentLayoutProps {
   mediumScreen?: boolean;
   collapsed?: boolean;
   colorBgContainer?: string;
-  pageTitle?: string;
-  setPageTitle?: React.Dispatch<React.SetStateAction<string>>;
   footer?: React.ReactNode;
   Component?: React.ReactNode;
 }
@@ -23,15 +22,13 @@ const MainContentLayout = ({
   mediumScreen,
   collapsed,
   colorBgContainer,
-  pageTitle,
-  setPageTitle,
   footer,
   Component,
 }: IMainContentLayoutProps) => {
-  const { userInformation, selectedBusinessUnit } = useAppSelector(
-    (store) => store?.userSlice,
-    shallowEqual
-  );
+  const {
+    userSlice: { userInformation, selectedBusinessUnit },
+    appUtilitySlice: { pageTitle },
+  } = useAppSelector((store) => store, shallowEqual);
   const router = useRouter();
   const dispatch = useDispatch();
   const [openProfileModal, setOpenProfileModal] = React.useState(false);
@@ -63,7 +60,7 @@ const MainContentLayout = ({
                   options={userInformation?.permittedBusinessUnitDDL || []}
                   onChange={(valueOption) => {
                     dispatch(setSelectedBusinessUnit(valueOption));
-                    setPageTitle("");
+                    dispatch(setPageTitle(""));
                     router.push("/");
                   }}
                   className="mb-0"

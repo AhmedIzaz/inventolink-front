@@ -4,11 +4,15 @@ import CommonInput from "@common/components/CommonInput";
 import Loading from "@common/components/Loading";
 import NormalSelect, { IDDLOption } from "@common/components/NormalSelect";
 import useAxiosGet from "@common/customHooks/useAxiosGet";
+import useAxiosPost from "@common/customHooks/useAxiosPost";
 import { CommonContainer } from "@common/Layout/MainNavigationLayout";
 import { IValidationSchema } from "@common/types/formTypes";
+import { setPageTitle } from "@store/reducers/appUtilitySlices";
+import { useAppDispatch, useAppSelector } from "@store/store";
 import { Form } from "antd";
 import { useForm } from "antd/es/form/Form";
 import React, { useEffect } from "react";
+import { shallowEqual } from "react-redux";
 
 const initialValues = {
   businessUnitName: "",
@@ -17,35 +21,36 @@ const initialValues = {
   language: null,
 };
 const BusinessUnitConfiguration = () => {
+  const dispatch = useAppDispatch();
   const [currencyDDL, getCurrencyDDL, , loadingOnGetCurrency] = useAxiosGet<
     IDDLOption[] | []
   >([]);
-  const [languageDDL, getLanguageDDL, setLanguageDDL, loadingOnGetLanguage] =
-    useAxiosGet<IDDLOption[] | []>([]);
+
   const [formInstance] = useForm();
   const { setFieldValue, getFieldValue, submit, resetFields } = formInstance;
+  const [, createBusinessUnit, , loadingOnCreateBU] = useAxiosPost();
 
   useEffect(() => {
     getCurrencyDDL(`/configuration/currency/get-all-currencies-ddl`);
-    getLanguageDDL(`https://api.languagetoolplus.com/v2/languages`, (res) => {
-      const modifiedLanguageDDL: IDDLOption[] = res.map((item) => ({
-        label: item?.name,
-        value: item?.longCode,
-      }));
-      setLanguageDDL(modifiedLanguageDDL);
-    });
+    dispatch(setPageTitle("Business Unit"));
+    return () => {
+      dispatch(setPageTitle(""));
+    };
   }, []);
 
   return (
     <>
-      {loadingOnGetCurrency || (loadingOnGetLanguage && <Loading />)}
+      {(loadingOnGetCurrency || loadingOnCreateBU) && <Loading />}
       <CommonContainer className=" bg-white my-2 p-2 rounded-lg">
         <Form
           form={formInstance}
           initialValues={initialValues}
           layout="vertical"
           onFinish={(values) => {
-            console.log(values);
+            createBusinessUnit({
+              url: "/configuration/business-unit/create-business-unit",
+              payload: values,
+            });
           }}
         >
           <div className="grid md:grid-cols-12 md:grid-flow-col gap-4">
@@ -72,28 +77,32 @@ const BusinessUnitConfiguration = () => {
             <div className="md:col-span-3">
               <NormalSelect
                 showSearch={true}
-                allowClear={false}
+                allowClear={true}
                 label="Select Currency"
                 name="baseCurrency"
                 options={currencyDDL}
                 rules={rules.baseCurrency}
+                onChange={(value) => {
+                  setFieldValue("baseCurrency", value);
+                }}
               />
             </div>
             <div className="md:col-span-3">
-              <NormalSelect
-                showSearch={false}
-                allowClear={false}
-                placeholder=""
-                label="Select Language"
+              <CommonInput
+                type="text"
+                required={true}
+                label="Language"
                 name="language"
-                options={languageDDL}
+                inputcontainerclassname="mb-0"
               />
             </div>
+          </div>
+          <div className="grid md:grid-cols-12 md:grid-flow-col gap-4 mt-4">
             <div className="md:col-span-3">
               <CommonButton
                 htmlType="submit"
                 type="primary"
-                rootClassName="bg-blue-500 text-white"
+                rootClassName="bg-blue-500 text-white w-full md:w-auto"
                 onClick={submit}
               >
                 Save
@@ -141,10 +150,6 @@ const rules: IValidationSchema = {
     {
       required: true,
       message: "Base Currency is required",
-    },
-    {
-      type: "object",
-      message: "Must be a valid currency",
     },
   ],
 };

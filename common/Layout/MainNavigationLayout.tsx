@@ -12,7 +12,6 @@ interface IMainNavigationLayoutProps {
   collapsed?: boolean;
   setCollapsed?: (value: boolean) => void;
   menuItems?: MenuItem[];
-  setPageTitle?: (value: string) => void;
   colorBgContainer?: string;
 }
 const MainNavigationLayout = ({
@@ -21,7 +20,6 @@ const MainNavigationLayout = ({
   collapsed,
   setCollapsed,
   colorBgContainer,
-  setPageTitle,
 }: IMainNavigationLayoutProps) => {
   const router = useRouter();
   return (
@@ -52,9 +50,6 @@ const MainNavigationLayout = ({
               items={menuItems}
               onSelect={(value: any) => {
                 router.push(value?.item?.props?.path);
-                if (value) {
-                  setPageTitle(value?.item?.props?.title);
-                }
               }}
             />
           </div>
@@ -99,9 +94,6 @@ const MainNavigationLayout = ({
             items={menuItems}
             onSelect={(value: any) => {
               router.push(value?.item?.props?.path);
-              if (value) {
-                setPageTitle(value?.item?.props?.title);
-              }
             }}
           />
         </Sider>
