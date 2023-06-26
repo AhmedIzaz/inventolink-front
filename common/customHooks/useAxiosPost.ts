@@ -1,11 +1,16 @@
+import { IToastType } from "@common/types/text";
 import axios from "axios";
 import React, { Dispatch, SetStateAction } from "react";
+import { toast } from "react-toastify";
 
 interface IPostRequest {
   url?: string;
   payload?: any;
   callback?: (res: any) => void;
   requestType?: "post" | "put" | "delete" | "patch";
+  isToast?: boolean;
+  toastType?: IToastType;
+  toastMessage?: string;
 }
 
 const useAxiosPost = (
@@ -25,7 +30,10 @@ const useAxiosPost = (
     url,
     payload,
     callback,
-    requestType,
+    requestType = "post",
+    isToast = true,
+    toastType = "success",
+    toastMessage,
   }: IPostRequest) => {
     setLoading(true);
     try {
@@ -33,6 +41,7 @@ const useAxiosPost = (
       setLoading(false);
       callback?.(response.data);
       setResponse(response.data);
+      if (isToast) toast[toastType](toastMessage || response.data?.message);
       return response.data;
     } catch (error) {
       setLoading(false);

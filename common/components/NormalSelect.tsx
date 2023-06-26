@@ -69,7 +69,15 @@ const NormalSelect = ({
           mode={mode}
           value={value}
           onSearch={onSearch}
-          filterOption={filterOption}
+          filterOption={
+            filterOption ||
+            (showSearch
+              ? (input, option) =>
+                  (option?.label ?? "")
+                    .toLowerCase()
+                    .includes(input.toLowerCase())
+              : null)
+          }
           options={options}
           clearIcon={clearIcon}
           allowClear={allowClear}
