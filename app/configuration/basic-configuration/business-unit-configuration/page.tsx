@@ -6,14 +6,16 @@ import NormalSelect, { IDDLOption } from "@common/components/NormalSelect";
 import useAxiosGet from "@common/customHooks/useAxiosGet";
 import useAxiosPost from "@common/customHooks/useAxiosPost";
 import { CommonContainer } from "@common/Layout/MainNavigationLayout";
-import { IValidationSchema } from "@common/types/formTypes";
 import { setPageTitle } from "@store/reducers/appUtilitySlices";
 import { useAppDispatch, useAppSelector } from "@store/store";
 import { Form } from "antd";
 import { useForm } from "antd/es/form/Form";
 import React, { useEffect } from "react";
 import { shallowEqual } from "react-redux";
-
+import {
+  businessUnitCreateRules as rules,
+  onCreateBusinessUnit,
+} from "./helper";
 const initialValues = {
   businessUnitName: "",
   address: "",
@@ -21,13 +23,18 @@ const initialValues = {
   language: null,
 };
 const BusinessUnitConfiguration = () => {
+  const {
+    userInformation: {
+      employeeInformation: { master_account },
+    },
+  } = useAppSelector((store) => store?.userSlice, shallowEqual);
   const dispatch = useAppDispatch();
   const [currencyDDL, getCurrencyDDL, , loadingOnGetCurrency] = useAxiosGet<
     IDDLOption[] | []
   >([]);
 
   const [formInstance] = useForm();
-  const { setFieldValue, getFieldValue, submit, resetFields } = formInstance;
+  const { setFieldValue, submit } = formInstance;
   const [, createBusinessUnit, , loadingOnCreateBU] = useAxiosPost();
 
   useEffect(() => {
@@ -37,7 +44,6 @@ const BusinessUnitConfiguration = () => {
       dispatch(setPageTitle(""));
     };
   }, []);
-
   return (
     <>
       {(loadingOnGetCurrency || loadingOnCreateBU) && <Loading />}
@@ -47,9 +53,11 @@ const BusinessUnitConfiguration = () => {
           initialValues={initialValues}
           layout="vertical"
           onFinish={(values) => {
-            createBusinessUnit({
-              url: "/configuration/business-unit/create-business-unit",
-              payload: values,
+            onCreateBusinessUnit({
+              values,
+              master_account,
+              createBusinessUnit,
+              setFieldValue,
             });
           }}
         >
@@ -116,40 +124,3 @@ const BusinessUnitConfiguration = () => {
 };
 
 export default BusinessUnitConfiguration;
-
-const rules: IValidationSchema = {
-  businessUnitName: [
-    {
-      required: true,
-      message: "Business Unit Name is required",
-    },
-    {
-      type: "string",
-      message: "Must be a string",
-    },
-    {
-      min: 3,
-      message: "Must be at least 3 characters",
-    },
-    {
-      max: 100,
-      message: "Must be at most 50 characters",
-    },
-  ],
-  address: [
-    {
-      required: true,
-      message: "Address is required",
-    },
-    {
-      min: 3,
-      message: "Must be at least 3 characters",
-    },
-  ],
-  baseCurrency: [
-    {
-      required: true,
-      message: "Base Currency is required",
-    },
-  ],
-};

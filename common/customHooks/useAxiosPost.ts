@@ -32,7 +32,7 @@ const useAxiosPost = (
     callback,
     requestType = "post",
     isToast = true,
-    toastType,
+    toastType = "success",
     toastMessage,
   }: IPostRequest) => {
     setLoading(true);
