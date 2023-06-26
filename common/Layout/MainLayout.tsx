@@ -40,7 +40,6 @@ const MainLayout = ({ Component, footer }: IMainLayoutProps) => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const [collapsed, setCollapsed] = useState(false);
-  const [pageTitle, setPageTitle] = useState<string>("");
   const {
     token: { colorBgContainer },
   } = theme.useToken();
@@ -95,7 +94,6 @@ const MainLayout = ({ Component, footer }: IMainLayoutProps) => {
           </Head>
           <MainNavigationLayout
             colorBgContainer={colorBgContainer}
-            setPageTitle={setPageTitle}
             mediumScreen={mediumScreen}
             menuItems={permittedMenus}
             collapsed={collapsed}
@@ -103,8 +101,6 @@ const MainLayout = ({ Component, footer }: IMainLayoutProps) => {
           />
           <MainContentLayout
             footer={footer}
-            pageTitle={pageTitle}
-            setPageTitle={setPageTitle}
             Component={Component}
             mediumScreen={mediumScreen}
             collapsed={collapsed}
