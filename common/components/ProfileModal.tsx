@@ -46,7 +46,6 @@ const ProfileComponent = ({ employeeInformation, onClose }) => {
             dispatch(setUserInformation({}));
             dispatch(setAuthSlice({}));
             onClose?.();
-            router.push("/auth/login");
           }}
         >
           Sign Out

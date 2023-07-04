@@ -1,6 +1,7 @@
 "use client";
 import CommonButton from "@common/components/CommonButton";
 import CommonInput from "@common/components/CommonInput";
+import CommonTable from "@common/components/CommonTable";
 import Loading from "@common/components/Loading";
 import NormalSelect, { IDDLOption } from "@common/components/NormalSelect";
 import useAxiosGet from "@common/customHooks/useAxiosGet";
@@ -8,7 +9,7 @@ import useAxiosPost from "@common/customHooks/useAxiosPost";
 import { CommonContainer } from "@common/Layout/MainNavigationLayout";
 import { setPageTitle } from "@store/reducers/appUtilitySlices";
 import { useAppDispatch, useAppSelector } from "@store/store";
-import { Form } from "antd";
+import { Form, Table, Typography } from "antd";
 import { useForm } from "antd/es/form/Form";
 import React, { useEffect } from "react";
 import { shallowEqual } from "react-redux";
@@ -22,6 +23,7 @@ const initialValues = {
   baseCurrency: null,
   language: null,
 };
+
 const BusinessUnitConfiguration = () => {
   const {
     userInformation: {
@@ -119,8 +121,70 @@ const BusinessUnitConfiguration = () => {
           </div>
         </Form>
       </CommonContainer>
+      <CommonContainer className=" bg-white my-2 p-2 rounded-lg">
+        <Typography.Title level={5}>Business Unit List</Typography.Title>
+        <CommonTable
+          dataSource={dataSource}
+          columns={[
+            {
+              title: "Business Unit ID",
+              dataIndex: "id",
+            },
+            {
+              title: "Business Unit Name",
+              dataIndex: "title",
+              sort: true,
+              filter: true,
+              filterSearch: true,
+            },
+          ]}
+        />
+      </CommonContainer>
     </>
   );
 };
 
 export default BusinessUnitConfiguration;
+
+const dataSource = [
+  {
+    id: 1,
+    title: "test",
+  },
+  {
+    id: 2,
+    title: "test 2",
+  },
+];
+
+// {/* <Table
+//           rowClassName={"cursor-pointer h-8"}
+//           // className=" h-8"
+//           pagination={false}
+//           onRow={(record) => ({
+//             onClick: () => {
+//               console.log(record);
+//             },
+//           })}
+//           columns={[
+//             {
+//               dataIndex: "id",
+//               title: "Business Unit ID",
+//               className: "!p-1",
+//             },
+//             {
+//               className: "!p-1",
+//               dataIndex: "title",
+//               title: "Business Unit Name",
+//               sorter: true,
+//               filters: dataSource.map((item) => ({
+//                 text: item.title,
+//                 value: item.title,
+//               })),
+//               onFilter: (value: string, record: any) =>
+//                 record.title.includes(value),
+//               filterSearch: true,
+//             },
+//           ]}
+//           dataSource={dataSource}
+//         /> */}
