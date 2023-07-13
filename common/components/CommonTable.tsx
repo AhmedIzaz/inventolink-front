@@ -1,14 +1,25 @@
 "use client";
 import { createUniqueList } from "@utils/uniqIdentifier";
 import { Table } from "antd";
-import { ColumnsType } from "antd/es/table";
+import { ColumnsType, TablePaginationConfig } from "antd/es/table";
+import {
+  FilterValue,
+  SorterResult,
+  TableCurrentDataSource,
+} from "antd/es/table/interface";
 import React, { useMemo, useState } from "react";
-
+type IHandleTableProps = {
+  pagination: TablePaginationConfig;
+  filters: Record<string, FilterValue | null>;
+  sorter: SorterResult<any> | SorterResult<any>[];
+  newRowDto: TableCurrentDataSource<any>;
+};
 type Props = {
   dataSource: any[];
   columns: ColumnsType<any> | any[];
   setColumnsData?: (data: any) => void;
-  handleTableChange?: (data: any) => void;
+  handleTableChange?: (handleTableProps: IHandleTableProps) => void;
+  pagination?: TablePaginationConfig;
 };
 
 function CommonTable(props: Props) {
@@ -20,7 +31,7 @@ function CommonTable(props: Props) {
     () => modifieColumn({ columns: props?.columns, filteredInfo, filterList }),
     [props.columns, filteredInfo, filterList]
   );
-  const handleTableChange = (
+  const handleTableOnChange = (
     pagination: any,
     filters: any,
     sorter: any,
@@ -32,7 +43,13 @@ function CommonTable(props: Props) {
     setFIlterList?.(newRowDto?.currentDataSource);
     props?.handleTableChange?.({ pagination, filters, sorter, newRowDto });
   };
-  return <Table onChange={handleTableChange} {...props} columns={columns} />;
+  return (
+    <Table
+      onChange={handleTableOnChange}
+      {...props}
+      columns={columns}
+    />
+  );
 }
 
 export default CommonTable;
