@@ -9,9 +9,10 @@ import useAxiosPost from "@common/customHooks/useAxiosPost";
 import { CommonContainer } from "@common/Layout/MainNavigationLayout";
 import { setPageTitle } from "@store/reducers/appUtilitySlices";
 import { useAppDispatch, useAppSelector } from "@store/store";
-import { Form, Table, Typography } from "antd";
+import { getPaginationSerial } from "@utils/calculations";
+import { Form, Table, TablePaginationConfig, Typography } from "antd";
 import { useForm } from "antd/es/form/Form";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { shallowEqual } from "react-redux";
 import {
   businessUnitCreateRules as rules,
@@ -38,7 +39,10 @@ const BusinessUnitConfiguration = () => {
   const [formInstance] = useForm();
   const { setFieldValue, submit } = formInstance;
   const [, createBusinessUnit, , loadingOnCreateBU] = useAxiosPost();
-
+  const [pagination, setPagination] = useState<TablePaginationConfig>({
+    current: 1,
+    pageSize: 10,
+  });
   useEffect(() => {
     getCurrencyDDL(`/configuration/currency/get-all-currencies-ddl`);
     dispatch(setPageTitle("Business Unit"));
@@ -127,6 +131,11 @@ const BusinessUnitConfiguration = () => {
           dataSource={dataSource}
           columns={[
             {
+              title: "SL",
+              render: (_, __, index) =>
+                getPaginationSerial({ index, pagination }),
+            },
+            {
               title: "Business Unit ID",
               dataIndex: "id",
             },
@@ -138,6 +147,10 @@ const BusinessUnitConfiguration = () => {
               filterSearch: true,
             },
           ]}
+          handleTableChange={({ pagination: newPagination }) => {
+            setPagination(newPagination);
+          }}
+          pagination={pagination}
         />
       </CommonContainer>
     </>
@@ -154,6 +167,128 @@ const dataSource = [
   {
     id: 2,
     title: "test 2",
+  },
+  {
+    id: 3,
+
+    title: "test 3",
+  },
+  {
+    id: 1,
+    title: "test",
+  },
+  {
+    id: 2,
+    title: "test 2",
+  },
+  {
+    id: 3,
+
+    title: "test 3",
+  },
+  {
+    id: 1,
+    title: "test",
+  },
+  {
+    id: 2,
+    title: "test 2",
+  },
+  {
+    id: 3,
+
+    title: "test 3",
+  },
+  {
+    id: 1,
+    title: "test",
+  },
+  {
+    id: 2,
+    title: "test 2",
+  },
+  {
+    id: 3,
+
+    title: "test 3",
+  },
+  {
+    id: 1,
+    title: "test",
+  },
+  {
+    id: 2,
+    title: "test 2",
+  },
+  {
+    id: 3,
+
+    title: "test 3",
+  },
+  {
+    id: 1,
+    title: "test",
+  },
+  {
+    id: 2,
+    title: "test 2",
+  },
+  {
+    id: 3,
+
+    title: "test 3",
+  },
+  {
+    id: 1,
+    title: "test",
+  },
+  {
+    id: 2,
+    title: "test 2",
+  },
+  {
+    id: 3,
+
+    title: "test 3",
+  },
+  {
+    id: 1,
+    title: "test",
+  },
+  {
+    id: 2,
+    title: "test 2",
+  },
+  {
+    id: 3,
+
+    title: "test 3",
+  },
+  {
+    id: 1,
+    title: "test",
+  },
+  {
+    id: 2,
+    title: "test 2",
+  },
+  {
+    id: 3,
+
+    title: "test 3",
+  },
+  {
+    id: 1,
+    title: "test",
+  },
+  {
+    id: 2,
+    title: "test 2",
+  },
+  {
+    id: 3,
+
+    title: "test 3",
   },
 ];
 
