@@ -42,10 +42,12 @@ export const onCreateBusinessUnit = ({
   master_account,
   createBusinessUnit,
   setFieldValue,
+  userId,
 }) => {
   const payload = {
     ...values,
     account_id: master_account?.id || 0,
+    created_by: userId,
   };
   createBusinessUnit?.({
     url: "/configuration/business-unit/create-business-unit",
