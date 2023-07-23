@@ -10,7 +10,7 @@ import { CommonContainer } from "@common/Layout/MainNavigationLayout";
 import { setPageTitle } from "@store/reducers/appUtilitySlices";
 import { useAppDispatch, useAppSelector } from "@store/store";
 import { getPaginationSerial } from "@utils/calculations";
-import { Form, Table, TablePaginationConfig, Typography } from "antd";
+import { Form, Switch, TablePaginationConfig, Typography } from "antd";
 import { useForm } from "antd/es/form/Form";
 import React, { useEffect, useState } from "react";
 import { shallowEqual } from "react-redux";
@@ -29,6 +29,7 @@ const BusinessUnitConfiguration = () => {
   const {
     userInformation: {
       employeeInformation: { master_account },
+      userInformation: { id: userId },
     },
   } = useAppSelector((store) => store?.userSlice, shallowEqual);
   const dispatch = useAppDispatch();
@@ -64,6 +65,7 @@ const BusinessUnitConfiguration = () => {
               master_account,
               createBusinessUnit,
               setFieldValue,
+              userId,
             });
           }}
         >
@@ -129,24 +131,7 @@ const BusinessUnitConfiguration = () => {
         <Typography.Title level={5}>Business Unit List</Typography.Title>
         <CommonTable
           dataSource={dataSource}
-          columns={[
-            {
-              title: "SL",
-              render: (_, __, index) =>
-                getPaginationSerial({ index, pagination }),
-            },
-            {
-              title: "Business Unit ID",
-              dataIndex: "id",
-            },
-            {
-              title: "Business Unit Name",
-              dataIndex: "title",
-              sort: true,
-              filter: true,
-              filterSearch: true,
-            },
-          ]}
+          columns={columns({ pagination })}
           handleTableChange={({ pagination: newPagination }) => {
             setPagination(newPagination);
           }}
@@ -291,35 +276,35 @@ const dataSource = [
     title: "test 3",
   },
 ];
-
-// {/* <Table
-//           rowClassName={"cursor-pointer h-8"}
-//           // className=" h-8"
-//           pagination={false}
-//           onRow={(record) => ({
-//             onClick: () => {
-//               console.log(record);
-//             },
-//           })}
-//           columns={[
-//             {
-//               dataIndex: "id",
-//               title: "Business Unit ID",
-//               className: "!p-1",
-//             },
-//             {
-//               className: "!p-1",
-//               dataIndex: "title",
-//               title: "Business Unit Name",
-//               sorter: true,
-//               filters: dataSource.map((item) => ({
-//                 text: item.title,
-//                 value: item.title,
-//               })),
-//               onFilter: (value: string, record: any) =>
-//                 record.title.includes(value),
-//               filterSearch: true,
-//             },
-//           ]}
-//           dataSource={dataSource}
-//         /> */}
+const columns = ({ pagination }) => [
+  {
+    title: "SL",
+    align: "center",
+    width: 50,
+    render: (_, __, index) => getPaginationSerial({ index, pagination }),
+  },
+  {
+    title: "Business Unit ID",
+    dataIndex: "id",
+  },
+  {
+    title: "Business Unit Name",
+    dataIndex: "title",
+    sort: true,
+    filter: true,
+    filterSearch: true,
+  },
+  {
+    title: "Action",
+    align: "center",
+    render: (_, record) => (
+      <>
+        <Switch
+          onChange={(checked: boolean) => {
+            console.log(checked);
+          }}
+        />
+      </>
+    ),
+  },
+];
