@@ -28,3 +28,6 @@ label {
 .ant-switch {
   background-color: rgb(112, 112, 112);
 }
+.ant-btn-primary {
+  background-color: #1677ff;
+}

@@ -29,6 +29,7 @@ const BusinessUnitConfiguration = () => {
   const {
     userInformation: {
       employeeInformation: { master_account },
+      userInformation: { id: userId },
     },
   } = useAppSelector((store) => store?.userSlice, shallowEqual);
   const dispatch = useAppDispatch();
@@ -64,6 +65,7 @@ const BusinessUnitConfiguration = () => {
               master_account,
               createBusinessUnit,
               setFieldValue,
+              userId,
             });
           }}
         >
