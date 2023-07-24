@@ -39,14 +39,15 @@ export const businessUnitCreateRules: IValidationSchema = {
 
 export const onCreateBusinessUnit = ({
   values,
-  master_account,
+  account_id,
   createBusinessUnit,
   setFieldValue,
   userId,
+  getBusinessUnitLanding,
 }) => {
   const payload = {
     ...values,
-    account_id: master_account?.id || 0,
+    account_id: account_id || 0,
     created_by: userId,
   };
   createBusinessUnit?.({
@@ -54,6 +55,16 @@ export const onCreateBusinessUnit = ({
     payload,
     callback: () => {
       setFieldValue?.("businessUnitName", null);
+      onGetBusinessUnitLanding({ getBusinessUnitLanding, account_id });
     },
   });
+};
+
+export const onGetBusinessUnitLanding = ({
+  getBusinessUnitLanding,
+  account_id,
+}) => {
+  getBusinessUnitLanding?.(
+    `/configuration/business-unit/get-business-unit-landing?account_id=${account_id}`
+  );
 };
