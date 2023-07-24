@@ -203,7 +203,6 @@ const columns = ({
         <Switch
           checked={record?.is_active}
           onChange={(checked: boolean) => {
-            console.log(checked);
             const payload = {
               business_unit_id: record?.id,
               activity: checked,
