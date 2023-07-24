@@ -15,7 +15,7 @@ type IHandleTableProps = {
   newRowDto: TableCurrentDataSource<any>;
 };
 type Props = {
-  dataSource: any[];
+  dataSource: any[] | any;
   columns: ColumnsType<any> | any[];
   setColumnsData?: (data: any) => void;
   handleTableChange?: (handleTableProps: IHandleTableProps) => void;
@@ -43,13 +43,7 @@ function CommonTable(props: Props) {
     setFIlterList?.(newRowDto?.currentDataSource);
     props?.handleTableChange?.({ pagination, filters, sorter, newRowDto });
   };
-  return (
-    <Table
-      onChange={handleTableOnChange}
-      {...props}
-      columns={columns}
-    />
-  );
+  return <Table onChange={handleTableOnChange} {...props} columns={columns} />;
 }
 
 export default CommonTable;

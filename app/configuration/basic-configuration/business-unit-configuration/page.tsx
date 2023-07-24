@@ -17,6 +17,7 @@ import { shallowEqual } from "react-redux";
 import {
   businessUnitCreateRules as rules,
   onCreateBusinessUnit,
+  onGetBusinessUnitLanding,
 } from "./helper";
 const initialValues = {
   businessUnitName: "",
@@ -28,7 +29,9 @@ const initialValues = {
 const BusinessUnitConfiguration = () => {
   const {
     userInformation: {
-      employeeInformation: { master_account },
+      employeeInformation: {
+        master_account: { id: account_id },
+      },
       userInformation: { id: userId },
     },
   } = useAppSelector((store) => store?.userSlice, shallowEqual);
@@ -44,16 +47,23 @@ const BusinessUnitConfiguration = () => {
     current: 1,
     pageSize: 10,
   });
+  const [businessUnitLanding, getBusinessUnitLanding, , loadingOnGetLanding] =
+    useAxiosGet();
+  const [, makeBusinessUnitActivity, , loadingOnBUActivity] = useAxiosPost();
   useEffect(() => {
     getCurrencyDDL(`/configuration/currency/get-all-currencies-ddl`);
     dispatch(setPageTitle("Business Unit"));
+    onGetBusinessUnitLanding({ getBusinessUnitLanding, account_id });
     return () => {
       dispatch(setPageTitle(""));
     };
   }, []);
   return (
     <>
-      {(loadingOnGetCurrency || loadingOnCreateBU) && <Loading />}
+      {(loadingOnGetCurrency ||
+        loadingOnCreateBU ||
+        loadingOnGetLanding ||
+        loadingOnBUActivity) && <Loading />}
       <CommonContainer className=" bg-white my-2 p-2 rounded-lg">
         <Form
           form={formInstance}
@@ -62,10 +72,11 @@ const BusinessUnitConfiguration = () => {
           onFinish={(values) => {
             onCreateBusinessUnit({
               values,
-              master_account,
+              account_id,
               createBusinessUnit,
               setFieldValue,
               userId,
+              getBusinessUnitLanding,
             });
           }}
         >
@@ -130,8 +141,13 @@ const BusinessUnitConfiguration = () => {
       <CommonContainer className=" bg-white my-2 p-2 rounded-lg">
         <Typography.Title level={5}>Business Unit List</Typography.Title>
         <CommonTable
-          dataSource={dataSource}
-          columns={columns({ pagination })}
+          dataSource={businessUnitLanding}
+          columns={columns({
+            pagination,
+            makeBusinessUnitActivity,
+            getBusinessUnitLanding,
+            account_id,
+          })}
           handleTableChange={({ pagination: newPagination }) => {
             setPagination(newPagination);
           }}
@@ -144,155 +160,40 @@ const BusinessUnitConfiguration = () => {
 
 export default BusinessUnitConfiguration;
 
-const dataSource = [
-  {
-    id: 1,
-    title: "test",
-  },
-  {
-    id: 2,
-    title: "test 2",
-  },
-  {
-    id: 3,
-
-    title: "test 3",
-  },
-  {
-    id: 1,
-    title: "test",
-  },
-  {
-    id: 2,
-    title: "test 2",
-  },
-  {
-    id: 3,
-
-    title: "test 3",
-  },
-  {
-    id: 1,
-    title: "test",
-  },
-  {
-    id: 2,
-    title: "test 2",
-  },
-  {
-    id: 3,
-
-    title: "test 3",
-  },
-  {
-    id: 1,
-    title: "test",
-  },
-  {
-    id: 2,
-    title: "test 2",
-  },
-  {
-    id: 3,
-
-    title: "test 3",
-  },
-  {
-    id: 1,
-    title: "test",
-  },
-  {
-    id: 2,
-    title: "test 2",
-  },
-  {
-    id: 3,
-
-    title: "test 3",
-  },
-  {
-    id: 1,
-    title: "test",
-  },
-  {
-    id: 2,
-    title: "test 2",
-  },
-  {
-    id: 3,
-
-    title: "test 3",
-  },
-  {
-    id: 1,
-    title: "test",
-  },
-  {
-    id: 2,
-    title: "test 2",
-  },
-  {
-    id: 3,
-
-    title: "test 3",
-  },
-  {
-    id: 1,
-    title: "test",
-  },
-  {
-    id: 2,
-    title: "test 2",
-  },
-  {
-    id: 3,
-
-    title: "test 3",
-  },
-  {
-    id: 1,
-    title: "test",
-  },
-  {
-    id: 2,
-    title: "test 2",
-  },
-  {
-    id: 3,
-
-    title: "test 3",
-  },
-  {
-    id: 1,
-    title: "test",
-  },
-  {
-    id: 2,
-    title: "test 2",
-  },
-  {
-    id: 3,
-
-    title: "test 3",
-  },
-];
-const columns = ({ pagination }) => [
+const columns = ({
+  pagination,
+  makeBusinessUnitActivity,
+  getBusinessUnitLanding,
+  account_id,
+}) => [
   {
     title: "SL",
     align: "center",
     width: 50,
     render: (_, __, index) => getPaginationSerial({ index, pagination }),
   },
-  {
-    title: "Business Unit ID",
-    dataIndex: "id",
-  },
+
   {
     title: "Business Unit Name",
-    dataIndex: "title",
+    dataIndex: "business_unit_name",
     sort: true,
     filter: true,
     filterSearch: true,
+  },
+  {
+    title: "Address",
+    dataIndex: "address",
+    render: (_, record) => record?.address || "N/A",
+    width: "30%",
+  },
+  {
+    title: "Currency",
+    render: (_, record) => record?.master_currency?.currency_name || "N/A",
+  },
+  {
+    title: "Language",
+    dataIndex: "language",
+    render: (_, record) => record?.language || "N/A",
   },
   {
     title: "Action",
@@ -300,8 +201,23 @@ const columns = ({ pagination }) => [
     render: (_, record) => (
       <>
         <Switch
+          checked={record?.is_active}
           onChange={(checked: boolean) => {
             console.log(checked);
+            const payload = {
+              business_unit_id: record?.id,
+              activity: checked,
+            };
+            makeBusinessUnitActivity?.({
+              url: `/configuration/business-unit/activity`,
+              payload,
+              callback: () => {
+                onGetBusinessUnitLanding({
+                  getBusinessUnitLanding,
+                  account_id,
+                });
+              },
+            });
           }}
         />
       </>
