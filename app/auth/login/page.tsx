@@ -15,6 +15,7 @@ import {
 import CommonInput from "@common/components/CommonInput";
 import CommonButton from "@common/components/CommonButton";
 import { IValidationSchema } from "@common/types/formTypes";
+import Axios from "axios";
 const LoginPage = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const { userInformation } = useAppSelector(
@@ -53,6 +54,9 @@ const LoginPage = () => {
                     payload: values,
                     requestType: "post",
                   });
+                  if (responseData?.token)
+                    Axios.defaults.headers.head.Authorization =
+                      responseData?.token;
                   dispatch(setUserInformation(responseData));
                   const selectedBusinessUnit =
                     responseData?.permittedBusinessUnitDDL?.[0];

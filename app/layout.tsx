@@ -11,13 +11,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+
   Axios.defaults.baseURL =
     process.env.NODE_ENV === "development"
       ? // ? process.env.REACT_APP_DEV_BASE_URL
         "http://localhost:4000"
       : // : process.env.REACT_APP_BASE_URL;
         "http://link.invento.com";
-
   return (
     <html lang="en">
       <body>
