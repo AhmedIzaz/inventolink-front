@@ -1,16 +1,15 @@
 import { EditOutlined } from "@ant-design/icons";
 import { Image } from "antd";
-import { useRouter } from "next/navigation";
 import {
   setAuthSlice,
   setUserInformation,
 } from "../../store/reducers/configurationSlices/authSlice";
 import { useAppDispatch } from "../../store/store";
 import CommonButton from "./CommonButton";
+import Axios from "axios";
 
 const ProfileComponent = ({ employeeInformation, onClose }) => {
   const dispatch = useAppDispatch();
-  const router = useRouter();
   return (
     <>
       <div className="container mt-4">
@@ -45,6 +44,7 @@ const ProfileComponent = ({ employeeInformation, onClose }) => {
           onClick={() => {
             dispatch(setUserInformation({}));
             dispatch(setAuthSlice({}));
+            Axios.defaults.headers.head.Authorization = "";
             onClose?.();
           }}
         >
